@@ -1,0 +1,133 @@
+* {
+    padding: 0;
+    margin: 0;
+
+}
+
+body {
+    background-color: rgba(152, 149, 148, 0.399);
+    color: rgba(32, 32, 32, 0.674);
+}
+
+:root {
+    --bg-color:
+}
+
+.container_main {
+    flex: 1;
+}
+
+
+.auth {
+    .icon {
+        font-size: 25px;
+        color: rgba(27, 26, 26, 0.399);
+    }
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.logo {
+    width: 70px;
+    height: 50px;
+}
+
+h4 {
+    color: rgba(73, 70, 70, 0.662);
+}
+
+.container_left {
+
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: start;
+    gap: 5px;
+
+    border: 1px solid rgba(59, 55, 55, 0.487);
+    border-radius: 10px;
+    background-color: #f7f7f7;
+
+    .search {
+        border: 1px solid rgba(59, 55, 55, 0.487);
+    }
+
+    .btn-search {
+        border: 1px solid rgba(59, 55, 55, 0.487);
+    }
+}
+
+.container_right {
+    border: 1px solid rgba(59, 55, 55, 0.487);
+    border-radius: 10px;
+    background-color: #f7f7f7;
+}
+
+.container_trivia {
+    border: 1px solid rgba(59, 55, 55, 0.487);
+    border-radius: 10px;
+    background-color: #f7f7f7;
+}
+
+footer {
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+.container {
+    .list-group {
+        li {
+            background-color: #e7e6e6;
+            border: 1px solid rgba(0, 0, 0, 0.104);
+        }
+    }
+}
+
+hr {
+    border: 1px solid #333;
+}
+
+
+/* Login.php start*/
+.container_login {
+    border: 1px solid rgba(59, 55, 55, 0.487);
+    border-radius: 10px;
+    background-color: #f7f7f7;
+
+    button {
+        border: 1px solid rgba(59, 55, 55, 0.487);
+    }
+}
+
+/* login.php end */
+
+
+/* register.php start */
+.container_register {
+    border: 1px solid rgba(59, 55, 55, 0.487);
+    border-radius: 10px;
+    background-color: #f7f7f7;
+
+    button {
+        border: 1px solid rgba(59, 55, 55, 0.487);
+    }
+}
+
+/* register.php end */
+
+
+/* news.php start */
+.container_news {
+
+    .container {
+        border: 1px solid rgba(59, 55, 55, 0.487);
+        border-radius: 10px;
+        background-color: #f7f7f7;
+
+
+    }
+}
