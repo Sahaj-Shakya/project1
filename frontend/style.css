@@ -143,5 +143,92 @@ hr {
 
 
 /* schedules.php start */
+.image_container {
+    position: relative;
+}
+
+.image:hover {
+    background-blend-mode: darken;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.image_container:hover .icons {
+    opacity: 1;
+}
+
+
+.icons i {
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.35);
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.image-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    display: none;
+}
+
+.image-popup span {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 40px;
+    font-weight: bolder;
+    color: #fff;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.image-popup a{
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    font-size: 40px;
+    font-weight: bolder;
+    color: #fff;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.image-popup img {
+    position: absolute;
+    max-width: 70%;  /* Ensures the image doesn't overflow the screen */
+    max-height: 70%; /* Ensures the image doesn't overflow the screen */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers the image */
+    border: 2px solid #fff;
+    border-radius: 5px;
+    object-fit: contain; /* Ensures the image fits within the container */
+}
+
+@media (max-width: 768px) {
+    .image-popup img {
+        width: 95%;  /* Scales for smaller screens */
+        height: auto;
+    }
+}
+
+
 
 /* schedules.php end */
