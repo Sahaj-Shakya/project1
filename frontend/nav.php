@@ -1,8 +1,10 @@
+<?php include 'bootstrap.php' ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,7 +18,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse col-10 navbar-collapse justify-content-between" id="navbarScroll">
-                <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll gap-4" style="--bs-scroll-height: 200px;">
+                <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll gap-2" style="--bs-scroll-height: 150px;">
                     <li class="nav-item">
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" aria-current="page" href="index.php">Home</a>
                     </li>
@@ -34,7 +36,7 @@
                     </li>
                 </ul>
                 <div class="auth d-flex align-items-center gap-2">
-                    <a href=""><i class="bi bi-person-circle icon"></i></a>
+                    <a href="login.php"><i class="bi bi-person-circle icon"></i></a>
                     <a href="login.php">Sign In</a>
                 </div>
             </div>

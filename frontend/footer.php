@@ -1,5 +1,3 @@
-<?php include 'bootstrap.php' ?>
-
 <footer class="container mt-5 text-center p-2">
     <hr>
     <p>© 2024 University of Heaven. All rights reserved.</p>

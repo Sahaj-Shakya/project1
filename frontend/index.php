@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+
+    <style>
+        
+    </style>
 </head>
 
 <body>
@@ -25,7 +29,7 @@
 
             </div>
 
-            <p class="text-muted ps-3 pe-3">
+            <p class="text-muted ps-3 pe-3" style="max-height: 300px; overflow-y:auto;">
                 Enter your roll number in the search box and click "Search" to find your seat planning.
             </p>
 
@@ -33,11 +37,11 @@
         </div>
 
 
-        <div class="container container_right p-2" style="max-height: 400px;">
+        <div class="container container_right p-2">
             <div class="container p-2">
                 <h4>Recent News</h4>
                 <hr>
-                <ul class="list-group">
+                <ul class="list-group" style="max-height: 300px; overflow-y:auto;">
                     <li class="list-group-item">Exam schedule for Fall 2024 released.</li>
                     <li class="list-group-item">Last date to change exam centers is October 10th.</li>
                     <li class="list-group-item">Exam center will be revealed in the last of this month. Please be patient by then. Thenk you!</li>
