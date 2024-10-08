@@ -80,6 +80,7 @@
         // Close the popup when the close button is clicked
         document.querySelector('.image-popup span').addEventListener('click', function () {
             document.querySelector('.image-popup').style.display = 'none';
+            document.querySelector('nav').style.zIndex = '1';
         });
     </script>
 
