@@ -20,18 +20,48 @@
                     <input type="email" class="form-control" id="email" placeholder="Enter email" required>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4 position-relative">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                    <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
                 
                 <p style="margin-bottom: 5px;">Not registered yet? <a href="register.php" style="text-decoration: underline;">Register now</a></p>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-outline-secondary">Login</button>
+                    <button name="login" type="submit" class="btn btn-outline-secondary">Login</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        // Toggle Password visibility for the "Password" field
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function(e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Toggle the eye icon
+            this.classList.toggle('bi-eye');
+            this.classList.toggle('bi-eye-slash');
+        });
+
+        // Toggle Password visibility for the "Confirm Password" field
+        const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
+        const confirmPassword = document.querySelector('#confirm-password');
+
+        toggleConfirmPassword.addEventListener('click', function(e) {
+            // Toggle the type attribute
+            const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPassword.setAttribute('type', type);
+            // Toggle the eye icon
+            this.classList.toggle('bi-eye');
+            this.classList.toggle('bi-eye-slash');
+        });
+    </script>
+
 </body>
 
 </html>

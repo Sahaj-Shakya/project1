@@ -12,7 +12,7 @@
 <body style="padding-top: 90px;">
     <nav class="navbar navbar-expand-md fixed-top" style="background-color: rgb(162, 161, 160);">
         <div class="container col-12">
-            <a class="navbar-brand me-5" href="index.php"><img class="logo" src="" alt="Logo"></a>
+            <a class="navbar-brand me-5" href="index.php"><img class="logo" src="download (1).png" alt="Logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
                 aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
