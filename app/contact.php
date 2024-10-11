@@ -1,3 +1,8 @@
+<?php
+session_start();
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+?>
+
 <html lang="en">
 
 <head>
@@ -8,6 +13,15 @@
 
 <body>
     <?php include 'nav.php' ?>
+    <?php if ($username == ''): ?>
+        <div class="container col-4">
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert" style="color: rgba(255, 0, 0, 0.7);">
+                Note: You have to be Signed In to contact us.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+    <?php endif; ?>
     <div class="container container_left p-3 col-lg-6">
         <h4 class="text mb-4 ">Contact us</h4>
         <form>
@@ -21,12 +35,12 @@
                 <input type="email" class="form-control" id="email" placeholder="Enter email" required>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" class="form-control" id="title" placeholder="Enter title" required>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
                 <textarea rows="6" cols="30" class="form-control" id="message" placeholder="Enter your message here.." required></textarea>
             </div>

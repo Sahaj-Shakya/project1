@@ -14,6 +14,12 @@ function validate($username, $email, $password, $con_password)
         return false;
     }
 
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $error = true;
+        $message = 'Invalid email address.';
+        return false;
+    }
+
     if (strpos($password, ' ') !== false) {
         $error = true;
         $message = 'Password should not contain spaces.';
@@ -41,7 +47,7 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $con_password = $_POST['confirm_password'];
 
-    $email_query = "SELECT * FROM `user` WHERE `email` LIKE '$email' LIMIT 1";
+    $email_query = "SELECT * FROM `user` WHERE `email` = '$email' LIMIT 1";
     $email_result = mysqli_query($conn, $email_query);
     $user = mysqli_fetch_assoc($email_result);
 
@@ -54,9 +60,11 @@ if (isset($_POST['register'])) {
             $query = "INSERT INTO user (username, email, password) VALUES ('$username', '$email', '$password')";
 
             if (mysqli_query($conn, $query)) {
+                $error = true;
                 $message = 'Registration Sucessfull';
                 header('Location: login.php');
             } else {
+                $error = true;
                 $message = "Error: " . mysqli_error($conn);
             }
         }
@@ -76,9 +84,10 @@ mysqli_close($conn);
 
 <body>
     <?php if ($error === true): ?>
-        <div class="container col-5">
-            <div class="alert alert-secondary" role="alert">
-                <?php echo $message; ?>
+        <div class="container col-4">
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                You have to be signed in to use contact us.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
     <?php endif; ?>
@@ -122,28 +131,24 @@ mysqli_close($conn);
     </div>
 
     <script>
-        // Toggle Password visibility for the "Password" field
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
 
         togglePassword.addEventListener('click', function(e) {
-            // Toggle the type attribute
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
-            // Toggle the eye icon
+
             this.classList.toggle('bi-eye');
             this.classList.toggle('bi-eye-slash');
         });
 
-        // Toggle Password visibility for the "Confirm Password" field
         const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
         const confirmPassword = document.querySelector('#confirm-password');
 
         toggleConfirmPassword.addEventListener('click', function(e) {
-            // Toggle the type attribute
             const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             confirmPassword.setAttribute('type', type);
-            // Toggle the eye icon
+            
             this.classList.toggle('bi-eye');
             this.classList.toggle('bi-eye-slash');
         });

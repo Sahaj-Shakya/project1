@@ -1,3 +1,8 @@
+<?php
+session_start();
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : ''; 
+?>
+
 <?php include 'bootstrap.php' ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,10 +40,17 @@
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''; ?>" aria-current="page" href="contact.php">Contact us</a>
                     </li>
                 </ul>
+                <?php if($username != ''): ?>
                 <div class="auth d-flex align-items-center gap-2">
-                    <a href="login.php"><i class="bi bi-person-circle icon"></i></a>
-                    <a href="login.php">Sign In</a>
+                <a href="profile.php"><i class="bi bi-person-circle icon"></i></a>
+                <a href="profile.php"><?php echo ucwords($username); ?></a>
                 </div>
+                <?php else: ?>
+                    <div class="auth d-flex align-items-center gap-2">
+                    <a href="login.php"><i class="bi bi-person-circle icon"></i></a>
+                    <a href="login.php">Sign in</a>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

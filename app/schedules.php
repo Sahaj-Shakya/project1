@@ -12,7 +12,7 @@
 
     <div class="container d-flex flex-column w-100 col-lg-7">
         <div class="container container_left col-lg-8 mb-2">
-            <div class="d-flex flex-column flex-lg-row align-items-start gap-3 p-3">
+            <div class="d-flex flex-column flex-lg-row align-items-start gap-3 pt-3 pb-3">
                 <div class="container">
                     <h4 class="text mb-3">BCA 4th Sem Routine</h4>
                     <p>Date: 20 August - 30 August</p>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="container container_left col-lg-8 mb-2">
-            <div class="d-flex flex-column flex-lg-row align-items-start gap-3 p-3">
+            <div class="d-flex flex-column flex-lg-row align-items-start gap-3 pt-3 pb-3">
                 <div class="container">
                     <h4 class="text mb-3">BCA 4th Sem Routine</h4>
                     <p>Date: 20 August - 30 August</p>
@@ -45,6 +45,24 @@
 
                     </div>
 
+                </div>
+            </div>
+        </div>
+
+        <div class="container container_left col-lg-8 mb-2">
+            <div class="d-flex flex-column flex-lg-row align-items-start gap-3 pt-3 pb-3">
+                <div class="container">
+                    <h4 class="text mb-3">BCA 4th Sem Routine</h4>
+                    <p>Date: 20 August - 30 August</p>
+                    <p>Time: 3hrs</p>
+                </div>
+                <div class="image_container">
+                    <img src="routine.jpg" class="img-thumbnail img-fluid full_img image" alt="Routine" style="max-width: 300px; height: 200px">
+
+                    <div class="icons">
+                        <span><i class="bi bi-zoom-in" title="full-screen"></i></span>
+                        <a href="routine.jpg" download title="download"><i class="bi bi-download"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
