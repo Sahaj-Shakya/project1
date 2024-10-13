@@ -2,10 +2,10 @@
 session_start();
 // echo $_SESSION['username'];
 
-$facts_file = '../backend/facts.txt'; 
+$facts_file = '../scripts/new.txt'; 
 $num_of_facts = 3;
 
-$py_script = escapeshellcmd("python3 ../backend/facts.py $facts_file $num_of_facts");
+$py_script = escapeshellcmd("python3 ../scripts/facts.py $facts_file $num_of_facts");
 
 $output = shell_exec($py_script);
 
@@ -24,6 +24,18 @@ $output_array = json_decode($output, true);
 
 <body>
     <?php include 'nav.php' ?>
+
+    <?php if ($_SESSION['message'] != ''): ?>
+        <div class="container col-3">
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                <?php echo $_SESSION['message']; ?>
+                <?php unset($_SESSION['message']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <?php unset($_SESSION['message']); ?>
+
+    <?php endif; ?>
 
     <div class="container flex-column flex-sm-row d-flex w-100 col-lg-7 gap-5 mt-3">
         <div class="container container_left col-lg-4 ps-2 pe-2" style="max-height: 400px;">
@@ -57,7 +69,6 @@ $output_array = json_decode($output, true);
                     <li class="list-group-item">Exam schedule for Fall 2024 released.</li>
                     <li class="list-group-item">Last date to change exam centers is October 10th.</li>
                     <li class="list-group-item">Exam center will be revealed in the last of this month. Please be patient by then. Thenk you!</li>
-                    <li class="list-group-item">Colleges will remain closed from baisakh to shrawan due to dashain and tihar. All the students are requested to celebrate dashain and tihar.</li>
                     <li class="list-group-item">Colleges will remain closed from baisakh to shrawan due to dashain and tihar. All the students are requested to celebrate dashain and tihar.</li>
                     <li class="list-group-item">Colleges will remain closed from baisakh to shrawan due to dashain and tihar. All the students are requested to celebrate dashain and tihar.</li>
 

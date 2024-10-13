@@ -1,4 +1,11 @@
 <?php
+session_start();
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : ''; 
+
+if($username != ''){
+    header('Location: index.php');
+}
+
 include 'connection.php';
 
 $error = false;
