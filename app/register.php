@@ -93,7 +93,7 @@ mysqli_close($conn);
     <?php if ($error === true): ?>
         <div class="container col-4">
             <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                You have to be signed in to use contact us.
+                <?php echo $message ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>

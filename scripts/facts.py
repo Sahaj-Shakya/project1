@@ -11,7 +11,9 @@ def generate_facts(file, num_of_facts):
     
     with open(facts_file, 'r') as f:
 
-        facts = [line.strip() for line in f]
+        facts = [line.strip() for line in f if line.strip() != ""]
+        # print(facts)
+        
             
     random_facts: list[str] = random.sample(facts, num_of_facts)
     random_facts = json.dumps(random_facts)

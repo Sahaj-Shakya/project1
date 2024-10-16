@@ -112,7 +112,7 @@ if (isset($_POST['save'])) {
 
                 <div class="d-flex justify-content-end gap-2 mt-2">
                     <button name="save" class="btn btn-outline-primary">Save</button>
-                    <a href="profile.php"><button class="btn btn-outline-danger">Cancel</button></a>
+                    <a href="profile.php" class="btn btn-outline-danger">Cancel</a>
                 </div>
             </form>
         </div>
