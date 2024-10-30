@@ -10,17 +10,19 @@ if ($username == false) {
     exit();
 }
 
-$query = "SELECT `sn` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
+$query = "SELECT `sn`, `password` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
 $result = mysqli_query($conn, $query);
 
 
 if ($result) {
     $row = mysqli_fetch_assoc($result);
     $id = $row['sn'];
+    $current_password = $row['password'];
 }
 
 $error = false;
 $message = '';
+
 
 function validate($current, $new, $confirm)
 {
@@ -54,6 +56,21 @@ if(isset($_POST['save'])){
     $confirm = $_POST['confirm_password'];
 
 
+    if ($current === $current_password){
+        if (validate($current, $new, $confirm)){
+            global $message;
+            $query = "UPDATE `user` SET `password` = '$new' WHERE `user`.`sn` = $id;";
+
+            if (mysqli_query($conn, $query)) {
+                $error = true;
+                $_SESSION['message'] = 'Password Changed!';
+                header('Location: profile.php');
+            } else {
+                $error = true;
+                $message = "Error: " . mysqli_error($conn);
+            }
+        }
+    }
 }
 
 ?>
