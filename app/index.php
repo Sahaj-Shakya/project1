@@ -26,16 +26,20 @@ $output_array = json_decode($output, true);
     <?php include 'nav.php' ?>
 
     <?php if ($_SESSION['message'] != ''): ?>
-        <div class="container col-3">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                <?php echo $_SESSION['message']; ?>
-                <?php unset($_SESSION['message']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
-        <?php unset($_SESSION['message']); ?>
 
     <?php endif; ?>
+
 
     <div class="container flex-column flex-sm-row d-flex w-100 col-lg-7 gap-5 mt-3">
         <div class="container container_left col-lg-4 ps-2 pe-2" style="max-height: 400px;">

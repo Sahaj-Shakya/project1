@@ -118,13 +118,13 @@ mysqli_close($conn);
 
                 <div class="mb-3 position-relative">
                     <label for="password" class="form-label">Password</label>
-                    <input maxlength="30" name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
+                    <input maxlength="20" name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
                     <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
 
                 <div class="mb-4 position-relative">
                     <label for="confirm-password" class="form-label">Confirm Password</label>
-                    <input maxlength="30" name="confirm_password" type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
+                    <input maxlength="20" name="confirm_password" type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
                     <i class="bi bi-eye-slash position-absolute" id="toggleConfirmPassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
 

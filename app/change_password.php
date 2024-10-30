@@ -1,4 +1,60 @@
 <?php
+include 'connection.php';
+
+session_start();
+$username = $_SESSION['username'];
+$user_email = $_SESSION['email'];
+
+if ($username == false) {
+    header('Location: login.php');
+    exit();
+}
+
+$query = "SELECT `sn` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
+$result = mysqli_query($conn, $query);
+
+
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $id = $row['sn'];
+}
+
+$error = false;
+$message = '';
+
+function validate($current, $new, $confirm)
+{
+    global $error, $message;
+
+    if (trim($current) === '' || trim($new) === '' || trim($confirm) === '') {
+        $error = true;
+        $message = 'Password can\'t be empty!';
+        return false;
+    }
+
+    if ($new !== $confirm){
+        $error = true;
+        $message = 'Confirm password doesn\'t match!';
+        return false;
+    }
+
+    if (strlen($new) > 20){
+        $error = true;
+        $message = 'Max character is 20!';
+        return false;
+    }
+
+
+    return true;
+}
+
+if(isset($_POST['save'])){
+    $current = $_POST['password'];
+    $new = $_POST['new_password'];
+    $confirm = $_POST['confirm_password'];
+
+
+}
 
 ?>
 
@@ -13,11 +69,14 @@
 <body>
 
     <?php if ($error === true): ?>
-        <div class="container col-4">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                <?php echo $message; ?>
-                <?php unset($_SESSION['message']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
     <?php endif; ?>
@@ -26,21 +85,21 @@
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 100px;">
         <div class="card container_login p-4 col-lg-4 col-md-6 col-sm-8">
-            <h4 class="mb-3">Change Password</h4>
+            <h4 class="mb-4">Change Password</h4>
             <form action="change_password.php" method="post">
                 <div class="mb-3 position-relative">
                     <label for="password" class="form-label">Current Password</label>
-                    <input maxlength="30" name="password" type="password" class="form-control" id="password" placeholder="Enter Current password" required>
+                    <input maxlength="20" name="password" type="password" class="form-control" id="password" placeholder="Enter Current password" required>
                     <i class="bi bi-eye-slash position-absolute" id="toggleCurrentPassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
                 <div class="mb-4 position-relative">
                     <label for="new-password" class="form-label">New Password</label>
-                    <input maxlength="30" name="new_password" type="password" class="form-control" id="new-password" placeholder="Enter New password" required>
+                    <input maxlength="20" name="new_password" type="password" class="form-control" id="new-password" placeholder="Enter New password" required>
                     <i class="bi bi-eye-slash position-absolute" id="toggleNewPassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
                 <div class="mb-4 position-relative">
                     <label for="confirm-password" class="form-label">Confirm Password</label>
-                    <input maxlength="30" name="confirm_password" type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
+                    <input maxlength="20" name="confirm_password" type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
                     <i class="bi bi-eye-slash position-absolute" id="toggleConfirmPassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
 

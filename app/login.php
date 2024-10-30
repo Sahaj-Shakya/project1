@@ -11,16 +11,16 @@ include 'connection.php';
 $error = false;
 $message = '';
 
-function validate($email, $password){
-    global $error, $message;
+// function validate($email, $password){
+//     global $error, $message;
 
-    if (trim($email) === '' || trim($password) === '') {
-        $error = true;
-        $message = 'Fill all the form fields.';
-        return false;
-    }
+//     if (trim($email) === '' || trim($password) === '') {
+//         $error = true;
+//         $message = 'Fill all the form fields.';
+//         return false;
+//     }
 
-}
+// }
 
 if(isset($_POST['login'])){
 
@@ -61,17 +61,21 @@ if(isset($_POST['login'])){
     <?php include 'nav.php'?>
 
     <?php if ($error == true || $message != ''): ?>
-        <div class="container col-4">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert" style="color: rgba(255, 0, 0, 0.7);">
-                <?php echo $message; ?>
-                <?php unset($_SESSION['message']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $message; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
 
     <?php endif; ?>
 
-    <div class="d-flex justify-content-center align-items-center" style="margin-top: 200px;">
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 150px;">
         <div class="card container_login p-4 col-lg-4 col-md-6 col-sm-8">
             <h4 class="text mb-4 ">Login</h4>
             <form method="post" action="login.php">
@@ -83,7 +87,7 @@ if(isset($_POST['login'])){
 
                 <div class="mb-4 position-relative">
                     <label for="password" class="form-label">Password</label>
-                    <input name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
+                    <input maxlength="20" name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
                     <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="cursor: pointer; right: 10px; top: 43px;"></i>
                 </div>
                 

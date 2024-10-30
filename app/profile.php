@@ -34,14 +34,19 @@ if ($result) {
 
 <body>
 
-    <?php if ($_SESSION['message'] != ''): ?>
-        <div class="container col-4">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                <?php echo $_SESSION['message']; ?>
-                <?php unset($_SESSION['message']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<?php if ($_SESSION['message'] != ''): ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
+
     <?php endif; ?>
 
     <?php include 'nav.php' ?>

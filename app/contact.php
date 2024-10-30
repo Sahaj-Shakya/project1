@@ -14,10 +14,14 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 <body>
     <?php include 'nav.php' ?>
     <?php if ($username == ''): ?>
-        <div class="container col-4">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert" style="color: rgba(255, 0, 0, 0.7);">
-                Note: You have to be Signed In to contact us.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        Note: You have to be Signed In to contact us.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
 

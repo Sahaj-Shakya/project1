@@ -43,16 +43,39 @@ function validate($username, $email)
 
 if (isset($_POST['save'])) {
     $new_username = $_POST['name'];
-    $new_email = $_POST['email'];
+    $new_email = strtolower($_POST['email']);
 
-    $email_query = "SELECT * FROM `user` WHERE `email` = '$new_email' LIMIT 1";
-    $email_result = mysqli_query($conn, $email_query);
-    $user = mysqli_fetch_assoc($email_result);
 
-    if ($user) {
-        $error = true;
-        $message = 'This email is already registered.';
-    } else {
+    if ($username === $new_username && $user_email === $new_email) {
+        header('Location: profile.php');
+    } elseif ($new_email !== $user_email) {
+        $email_query = "SELECT * FROM `user` WHERE `email` = '$new_email' LIMIT 1";
+        $email_result = mysqli_query($conn, $email_query);
+        $user = mysqli_fetch_assoc($email_result);
+
+        if ($user) {
+            $error = true;
+            $message = 'This email is already registered.';
+        } else{
+            if (validate($new_username, $new_email)) {
+                global $message;
+    
+                $update_query = "UPDATE `user` SET `username` = '$new_username', `email` = '$new_email' WHERE `user`.`sn` = '$id';";
+                $update_result = mysqli_query($conn, $update_query);
+    
+                if ($update_result) {
+                    $_SESSION['message'] = 'Profile updated.';
+                    $_SESSION['username'] = $new_username;
+                    $_SESSION['email'] = $new_email;
+    
+                    header('Location: profile.php');
+                } else {
+                    $error = true;
+                    $message = "Error: " . mysqli_error($conn);
+                }
+            }
+        }
+    }else {
         if (validate($new_username, $new_email)) {
             global $message;
 
@@ -86,11 +109,14 @@ if (isset($_POST['save'])) {
 <body>
 
     <?php if ($error === true): ?>
-        <div class="container col-4">
-            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                <?php echo $message; ?>
-                <?php unset($_SESSION['message']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
         </div>
     <?php endif; ?>
