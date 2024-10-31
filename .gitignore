@@ -1,2 +1,6 @@
 frontend_test/
 backend_test/
+*.png
+*.jpeg
+*.jpg
+*.webp

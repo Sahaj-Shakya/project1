@@ -1,3 +1,12 @@
+<?php
+include 'connection.php';
+
+$news_query = "SELECT * FROM `news`";
+$result = mysqli_query($conn, $news_query);
+
+
+?>
+
 <html lang="en">
 
 <head>
@@ -9,59 +18,29 @@
 <body>
     <?php include 'nav.php' ?>
 
-    <div class="container container_news">
-        <div class="container mb-2">
-            <div class="row mt-4">
 
-                <div class="container_img d-flex justify-content-center col-md-4 mb-3">
-                    <img style="width: 100%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg4W-0IQ5qyqu5RhjnI_LfQLInGJ4EkWSe0Q&s" class="img-fluid rounded" alt="News Image">
-                </div>
+    <?php while ($row = mysqli_fetch_assoc($result)) {
+    $title = $row['title'];
+    $description = $row['description'];
+    $image = $row['image'];
+    echo "<div class='container container_news mb-3'>";
+        echo "<div class='container mb-2'>";
+            echo "<div class='row mt-4'>";
 
-                <div class="container_details col-md-8 mb-3">
-                    <h4>Title</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, reiciendis! adipisicing elit. Quaerat molestias sapiente sit, architecto eveniet officiis, unde soluta excepturi dolorum, fugit officia modi? Sunt deserunt maiores non labore maxime magnam qui?</p>
-                    <a href="#" class="btn btn-outline-primary">See more</a>
-                </div>
-            </div>
-        </div>
+                echo "<div class='container_img d-flex justify-content-center col-md-4 mb-3'>";
+                    echo "<img style='width: 100%; max-height: 230px; object-fit: cover;' src='$image' class='img-fluid rounded' alt='News Image'>";
+                echo "</div>";
 
-    </div>
+                echo "<div class='container_details col-md-8 mb-3'>";
+                    echo "<h4>$title</h4>";
+                    echo "<p style='display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;'>$description</p>";
+                    echo "<a href='#' class='btn btn-outline-primary'>See more</a>";
+                echo "</div>";
 
-    <div class="container container_news">
-        <div class="container mb-2">
-            <div class="row mt-4">
-
-                <div class="container_img d-flex justify-content-center col-md-4 mb-3">
-                    <img style="width: 100%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg4W-0IQ5qyqu5RhjnI_LfQLInGJ4EkWSe0Q&s" class="img-fluid rounded" alt="News Image">
-                </div>
-
-                <div class="container_details col-md-8 mb-3">
-                    <h4>Title</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat molestias sapiente sit, architecto eveniet officiis, unde soluta excepturi dolorum, fugit officia modi? Sunt deserunt maiores non labore maxime magnam qui?</p>
-                    <a href="#" class="btn btn-outline-primary">See more</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="container container_news">
-        <div class="container mb-2">
-            <div class="row mt-4">
-
-                <div class="container_img d-flex justify-content-center col-md-4 mb-3">
-                    <img style="width: 100%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg4W-0IQ5qyqu5RhjnI_LfQLInGJ4EkWSe0Q&s" class="img-fluid rounded" alt="News Image">
-                </div>
-
-                <div class="container_details col-md-8 mb-3">
-                    <h4>Title</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat molestias sapiente sit, architecto eveniet officiis, unde soluta excepturi dolorum, fugit officia modi? Sunt deserunt maiores non labore maxime magnam qui?</p>
-                    <a href="#" class="btn btn-outline-primary">See more</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
+            echo "</div>";
+        echo "</div>";
+    echo "</div>";
+} ?>
 
     <?php include 'footer.php' ?>
 

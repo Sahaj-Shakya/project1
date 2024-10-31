@@ -1,6 +1,10 @@
 <?php
 session_start();
-// echo $_SESSION['username'];
+
+include 'connection.php';
+$news_query = "SELECT `title` FROM `news`";
+$result = mysqli_query($conn, $news_query);
+
 
 $facts_file = '../scripts/new.txt'; 
 $num_of_facts = 3;
@@ -70,11 +74,10 @@ $output_array = json_decode($output, true);
                 <h4>Recent News</h4>
                 <hr>
                 <ul class="list-group" style="max-height: 296px; overflow-y:auto;">
-                    <li class="list-group-item">Exam schedule for Fall 2024 released.</li>
-                    <li class="list-group-item">Last date to change exam centers is October 10th.</li>
-                    <li class="list-group-item">Exam center will be revealed in the last of this month. Please be patient by then. Thenk you!</li>
-                    <li class="list-group-item">Colleges will remain closed from baisakh to shrawan due to dashain and tihar. All the students are requested to celebrate dashain and tihar.</li>
-                    <li class="list-group-item">Colleges will remain closed from baisakh to shrawan due to dashain and tihar. All the students are requested to celebrate dashain and tihar.</li>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                        <?php $title = $row['title'];?>
+                    <li class="list-group-item"> <?php echo "<a href='news.php'>$title</a>"; ?></li>
+                    <?php endwhile; ?>
 
                 </ul>
             </div>

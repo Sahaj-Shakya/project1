@@ -38,7 +38,6 @@
                 </div>
                 <div class="image_container">
                     <img src="examcenter.jpg" class="img-thumbnail img-fluid full_img image" alt="Routine" style="max-width: 300px; height: 200px">
-
                     <div class="icons">
                         <span><i title="full-screen" class="bi bi-zoom-in"></i></span>
                         <a href="examcenter.jpg" download title="download"><i class="bi bi-download"></i></a>
