@@ -6,6 +6,35 @@ session_start();
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 $user_email = $_SESSION['email'];
 
+$error = false;
+$message = '';
+
+function validate($name, $email, $phone, $subject, $message)
+{
+    global $error, $message;
+
+    if (trim($name) === '' || trim($email) === '' || trim($phone) === '' || trim($subject) === '' || trim($message)) {
+        $error = true;
+        $message = 'Fill all the form fields.';
+        return false;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = true;
+        $message = 'Invalid email address.';
+        return false;
+    }
+
+    if (strlen($phone !== 10)) {
+        $error = true;
+        $message = 'Invalid phone number.';
+        return false;
+    }
+
+    return true;
+}
+
+
 if (isset($_POST['submit'])) {
     if ($username !== '') {
         $query = "SELECT `sn`, `password` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
@@ -23,14 +52,16 @@ if (isset($_POST['submit'])) {
         $subject = $_POST['subject'];
         $message = $_POST['message'];
 
-        $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$message', CURRENT_TIMESTAMP);";
-        $contact_us_result = mysqli_query($conn, $contact_us_query);
+        if (validate($name, $email, $phone, $subject, $message)) {
+            $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$message', CURRENT_TIMESTAMP);";
+            $contact_us_result = mysqli_query($conn, $contact_us_query);
 
-        if ($contact_us_result) {
-            $_SESSION['message'] = 'Message sent successfully!';
-            header('Location: contact.php');
-            exit;
-        }        
+            if ($contact_us_result) {
+                $_SESSION['message'] = 'Message sent successfully!';
+                header('Location: contact.php');
+                exit;
+            }
+        }
     } else {
         $_SESSION['message'] = 'You have to login first!';
         header('Location: login.php');
