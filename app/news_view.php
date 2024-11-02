@@ -31,7 +31,7 @@ $desc = $row['description'];
             <div class="container mb-4">
                 <h2 style="text-align: center;"><?php echo $title ?></h2>
             </div>
-            <div class="container d-flex justify-content-center">
+            <div class="container d-flex justify-content-center mb-4">
                 <img src="<?php echo $img ?>" alt="img">
             </div>
             <div class="container">
