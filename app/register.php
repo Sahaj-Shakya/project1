@@ -67,8 +67,7 @@ if (isset($_POST['register'])) {
             $query = "INSERT INTO user (username, email, password) VALUES ('$username', '$email', '$password')";
 
             if (mysqli_query($conn, $query)) {
-                $error = true;
-                $message = 'Registration Sucessfull';
+                $_SESSION['message'] = 'Registration Sucessfull';
                 header('Location: login.php');
             } else {
                 $error = true;

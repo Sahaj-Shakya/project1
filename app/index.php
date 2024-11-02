@@ -2,7 +2,7 @@
 session_start();
 
 include 'connection.php';
-$news_query = "SELECT `title` FROM `news`";
+$news_query = "SELECT * FROM `news`";
 $result = mysqli_query($conn, $news_query);
 
 
@@ -75,8 +75,11 @@ $output_array = json_decode($output, true);
                 <hr>
                 <ul class="list-group" style="max-height: 296px; overflow-y:auto;">
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                        <?php $title = $row['title'];?>
-                    <li class="list-group-item"> <?php echo "<a href='news.php'>$title</a>"; ?></li>
+                        <?php 
+                        $title = $row['title'];
+                        $sn = $row['sn'];
+                        ?>
+                    <li class="list-group-item"> <?php echo "<a href='news_view.php?sn=$sn'>$title</a>"; ?></li>
                     <?php endwhile; ?>
 
                 </ul>

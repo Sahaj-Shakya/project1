@@ -66,13 +66,26 @@ if(isset($_POST['login'])){
                 <div class="col-12 col-sm-10 col-md-8 col-lg-6">
                     <div class="alert alert-secondary alert-dismissible fade show" role="alert">
                         <?php echo $message; ?>
-                        <?php unset($_SESSION['message']); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
         </div>
 
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     <?php endif; ?>
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 150px;">

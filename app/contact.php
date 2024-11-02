@@ -1,6 +1,44 @@
 <?php
+
+include "connection.php";
+
 session_start();
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+$user_email = $_SESSION['email'];
+
+if (isset($_POST['submit'])) {
+    if ($username !== '') {
+        $query = "SELECT `sn`, `password` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
+        $result = mysqli_query($conn, $query);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $id = $row['sn'];
+        }
+
+        $user_sn = $id;
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $subject = $_POST['subject'];
+        $message = $_POST['message'];
+
+        $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$message', CURRENT_TIMESTAMP);";
+        $contact_us_result = mysqli_query($conn, $contact_us_query);
+
+        if ($contact_us_result) {
+            $_SESSION['message'] = 'Message sent successfully!';
+            header('Location: contact.php');
+            exit;
+        }        
+    } else {
+        $_SESSION['message'] = 'You have to login first!';
+        header('Location: login.php');
+        exit;
+    }
+}
+
+
 ?>
 
 <html lang="en">
@@ -13,6 +51,21 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
 <body>
     <?php include 'nav.php' ?>
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
     <?php if ($username == ''): ?>
         <div class="container">
             <div class="row justify-content-center">
@@ -26,38 +79,40 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         </div>
 
     <?php endif; ?>
+
+
     <div class="container w-100 col-lg-7">
         <div class="container container_left p-4 col-lg-8">
             <h4 class="text mb-4 ">Contact us</h4>
-            <form>
+            <form method="post">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="name" class="form-control" id="name" placeholder="Enter name" required>
+                    <input type="name" name="name" class="form-control" id="name" placeholder="Enter name" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter email" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Contact</label>
-                    <input minlength="10" maxlength="10" type="phone" class="form-control" id="phone" placeholder="Enter contact no." required>
+                    <input minlength="10" maxlength="10" name="phone" type="tel" class="form-control" id="phone" placeholder="Enter contact no." required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" placeholder="Enter title" required>
+                    <label for="subject" class="form-label">Subject</label>
+                    <input name="subject" maxlength="350" type="text" class="form-control" id="subject" placeholder="Enter Subject" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="message" class="form-label">Message</label>
-                    <textarea rows="6" cols="30" class="form-control" id="message" placeholder="Enter your message here.." required></textarea>
+                    <textarea rows="6" cols="30" name="message" class="form-control" id="message" placeholder="Enter your message here.." required></textarea>
                 </div>
 
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                    <button type="submit" name="submit" class="btn btn-outline-secondary">Submit</button>
                 </div>
             </form>
         </div>
