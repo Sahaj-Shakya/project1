@@ -18,7 +18,7 @@
                 <ol class="breadcrumb mt-4 ms-3">
                     <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                     <li class="breadcrumb-item">Admin</li>
-                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    <li class="breadcrumb-item active" aria-current="page">Students</li>
                 </ol>
             </nav>
         </div>

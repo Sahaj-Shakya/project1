@@ -1,0 +1,50 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.main {
+    display: flex;
+
+    .left-side {
+        width: 3.9%;
+        height: 100vh;
+        background-color: #dae4ed;
+    }
+}
+
+.top{
+    p{
+        font-size: 17px;
+    }
+    i{
+        font-size: 18px;
+    }
+
+    a{
+        text-decoration: none;
+        color: rgba(0, 0, 0, 0.614);
+    }
+}
+
+.bottom{
+
+    .left{
+        i{
+            font-size: 20px;
+        }
+        p{
+            font-size: 17px;
+        }
+        .profile{
+            text-decoration: none;
+            color: rgb(0, 0, 0, 0.614);
+        } 
+    }  
+}

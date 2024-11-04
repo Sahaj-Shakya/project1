@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Pannel</title>
+    <title>Users</title>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
                 <ol class="breadcrumb mt-4 ms-3">
                     <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                     <li class="breadcrumb-item">Admin</li>
-                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    <li class="breadcrumb-item active" aria-current="page">Users</li>
                 </ol>
             </nav>
         </div>
