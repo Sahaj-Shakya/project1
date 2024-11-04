@@ -10,12 +10,16 @@ body {
 }
 
 .main {
-    display: flex;
 
+    display: flex;
     .left-side {
         width: 3.9%;
         height: 100vh;
         background-color: #dae4ed;
+    }
+
+    .right-side{
+        width: 97.1%;
     }
 }
 
@@ -30,6 +34,13 @@ body {
     a{
         text-decoration: none;
         color: rgba(0, 0, 0, 0.614);
+    }
+}
+
+.breadcrumb{
+    a{
+        text-decoration: none;
+        color: black;
     }
 }
 

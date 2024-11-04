@@ -59,7 +59,7 @@
                             <i class="bi bi-person-circle me-2"></i>
                             <p class="m-0 text-nowrap">Super admin</p>
                         </a>
-                        <a href="#" title="logout" class="btn btn-outline-danger ms-3">
+                        <a href="#" title="logout" class="btn ms-3" style="color: red;">
                             <i class="bi bi-box-arrow-left m-0"></i>
                         </a>
                     </div>

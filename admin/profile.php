@@ -17,7 +17,7 @@
             <nav aria-label">
                 <ol class="breadcrumb mt-4 ms-3">
                     <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
-                    <li class="breadcrumb-item">Admin</li>
+                    <li class="breadcrumb-item"><a href="dashboard.php">Admin</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Profile</li>
                 </ol>
             </nav>
