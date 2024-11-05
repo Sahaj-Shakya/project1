@@ -1,3 +1,12 @@
+<?php
+
+include "../app/connection.php";
+
+$total_query = "SELECT COUNT(*) AS total_users FROM user";
+$total_result = mysqli_query($conn, $total_query);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,8 +31,42 @@
                 </ol>
             </nav>
 
-            <!-- add total users -->
+            <div class="card ms-5 mt-4 bg-secondary" style="max-width: 11rem;">
+                <div class="card-header bg-secondary text-white">
+                    <h5>Total Users</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h6>9,982</h6>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="contactus.php">See Users</a>
+                    </li>
+                </ul>
+            </div>
+
             <!-- add recent contact us -->
+            <div class="card ms-5 mt-5 bg-secondary" style="max-width: 15rem;">
+                <div class="card-header bg-secondary text-white">
+                    <h5>Recent Contact Us</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>John Doe</strong> <br>
+                        <small>Email: john@example.com</small><br>
+                        <small>Message: Need assistance...</small>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Jane Smith</strong> <br>
+                        <small>Email: jane@example.com</small><br>
+                        <small>Message: Issue with login...</small>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="contactus.php">See All</a>
+                    </li>
+                </ul>
+            </div>
+
 
         </div>
     </div>
