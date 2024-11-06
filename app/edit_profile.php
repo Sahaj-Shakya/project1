@@ -56,18 +56,18 @@ if (isset($_POST['save'])) {
         if ($user) {
             $error = true;
             $message = 'This email is already registered.';
-        } else{
+        } else {
             if (validate($new_username, $new_email)) {
                 global $message;
-    
+
                 $update_query = "UPDATE `user` SET `username` = '$new_username', `email` = '$new_email' WHERE `user`.`sn` = '$id';";
                 $update_result = mysqli_query($conn, $update_query);
-    
+
                 if ($update_result) {
                     $_SESSION['message'] = 'Profile updated.';
                     $_SESSION['username'] = $new_username;
                     $_SESSION['email'] = $new_email;
-    
+
                     header('Location: profile.php');
                 } else {
                     $error = true;
@@ -75,7 +75,7 @@ if (isset($_POST['save'])) {
                 }
             }
         }
-    }else {
+    } else {
         if (validate($new_username, $new_email)) {
             global $message;
 
@@ -126,7 +126,7 @@ if (isset($_POST['save'])) {
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 100px;">
         <div class="card container_login p-4 col-lg-4 col-md-6 col-sm-8">
             <h4 class="mb-3">Edit</h4>
-            <form action="edit_profile.php" method="post">
+            <form action="edit_profile.php" method="post" onsubmit="disableSubmitButton()">
                 <div class="mb-3">
                     <label for="name" class="form-label">Username</label>
                     <input name="name" type="text" class="form-control" id="name" value="<?php echo $username ?>" placeholder="Enter username" required>
@@ -137,12 +137,18 @@ if (isset($_POST['save'])) {
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-2">
-                    <button name="save" class="btn btn-outline-primary">Save</button>
+                    <button name="save" id="submitButton" class="btn btn-outline-primary">Save</button>
                     <a href="profile.php" class="btn btn-outline-danger">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        function disableSubmitButton() {
+            document.getElementById('submitButton').disabled = true;
+        }
+    </script>
 
 </body>
 

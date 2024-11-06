@@ -1,8 +1,8 @@
 <?php
 session_start();
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : ''; 
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
-if($username != ''){
+if ($username != '') {
     header('Location: index.php');
 }
 
@@ -21,7 +21,7 @@ function validate($username, $email, $password, $con_password)
         return false;
     }
 
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
         $message = 'Invalid email address.';
         return false;
@@ -154,7 +154,7 @@ mysqli_close($conn);
         toggleConfirmPassword.addEventListener('click', function(e) {
             const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             confirmPassword.setAttribute('type', type);
-            
+
             this.classList.toggle('bi-eye');
             this.classList.toggle('bi-eye-slash');
         });

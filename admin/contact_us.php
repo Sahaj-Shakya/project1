@@ -1,3 +1,12 @@
+<?php
+
+include "../app/connection.php";
+
+$contact_query = "SELECT * FROM `contact_us`";
+$result = mysqli_query($conn, $news_query);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

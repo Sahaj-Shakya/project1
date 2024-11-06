@@ -5,6 +5,14 @@ include "../app/connection.php";
 $total_query = "SELECT COUNT(*) AS total_users FROM user";
 $total_result = mysqli_query($conn, $total_query);
 
+$total_row = mysqli_fetch_assoc($total_result);
+$total = $total_row['total_users'];
+
+$contact_query = "SELECT * FROM `contact_us` ORDER BY `created_at` DESC";
+$contact_result = mysqli_query($conn, $contact_query);
+
+$contact_rows = mysqli_fetch_all($contact_result, MYSQLI_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +45,7 @@ $total_result = mysqli_query($conn, $total_query);
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <h6>9,982</h6>
+                        <h6><?php echo $total ?></h6>
                     </li>
                     <li class="list-group-item">
                         <a href="contactus.php">See Users</a>
@@ -45,24 +53,33 @@ $total_result = mysqli_query($conn, $total_query);
                 </ul>
             </div>
 
-            <!-- add recent contact us -->
-            <div class="card ms-5 mt-5 bg-secondary" style="max-width: 15rem;">
+            <div class="card ms-5 mt-5 bg-secondary" style="max-width: 24rem;">
                 <div class="card-header bg-secondary text-white">
                     <h5>Recent Contact Us</h5>
                 </div>
                 <ul class="list-group list-group-flush">
+                    <?php $counter = 0;?>
+                    <?php foreach ($contact_rows as $contact_row): ?>
+                        <?php
+
+                        if ($counter === 3) break;
+                        $name = $contact_row['name'];
+                        $email = $contact_row['email'];
+                        $subject = $contact_row['subject'];
+                        $message = $contact_row['message'];
+                        ?>
+
+                            <li class="list-group-item">
+                                <strong><?php echo $name; ?></strong> <br>
+                                <small><span style="font-weight: 500;">Email: </span><?php echo $email; ?></small><br>
+                                <small><span style="font-weight: 500;">Subject: </span><?php echo $subject; ?></small><br>
+                                <small style='display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;'><span style="font-weight: 500;">Message: </span><?php echo $message; ?></small>
+                            </li>
+                        <?php $counter ++; ?>
+
+                    <?php endforeach; ?>
                     <li class="list-group-item">
-                        <strong>John Doe</strong> <br>
-                        <small>Email: john@example.com</small><br>
-                        <small>Message: Need assistance...</small>
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Jane Smith</strong> <br>
-                        <small>Email: jane@example.com</small><br>
-                        <small>Message: Issue with login...</small>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="contactus.php">See All</a>
+                        <a href="contact_us.php">See All</a>
                     </li>
                 </ul>
             </div>

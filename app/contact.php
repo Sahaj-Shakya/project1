@@ -9,11 +9,11 @@ $user_email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 $error = false;
 $message = '';
 
-function validate($name, $email, $phone, $subject, $message)
+function validate($name, $email, $phone, $subject, $user_message)
 {
     global $error, $message;
 
-    if (trim($name) === '' || trim($email) === '' || trim($phone) === '' || trim($subject) === '' || trim($message)) {
+    if (trim($name) === '' || trim($email) === '' || trim($phone) === '' || trim($subject) === '' || trim($user_message) === '') {
         $error = true;
         $message = 'Fill all the form fields.';
         return false;
@@ -25,7 +25,7 @@ function validate($name, $email, $phone, $subject, $message)
         return false;
     }
 
-    if (strlen($phone !== 10)) {
+    if (strlen($phone) !== 10 || !ctype_digit($phone)) {
         $error = true;
         $message = 'Invalid phone number.';
         return false;
@@ -50,10 +50,10 @@ if (isset($_POST['submit'])) {
         $email = $_POST['email'];
         $phone = $_POST['phone'];
         $subject = $_POST['subject'];
-        $message = $_POST['message'];
+        $user_message = $_POST['message'];
 
-        if (validate($name, $email, $phone, $subject, $message)) {
-            $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$message', CURRENT_TIMESTAMP);";
+        if (validate($name, $email, $phone, $subject, $user_message)) {
+            $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$user_message', CURRENT_TIMESTAMP);";
             $contact_us_result = mysqli_query($conn, $contact_us_query);
 
             if ($contact_us_result) {
@@ -96,6 +96,19 @@ if (isset($_POST['submit'])) {
         </div>
     <?php endif; ?>
 
+    <?php if ($error): ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
 
     <?php if ($username == ''): ?>
         <div class="container">
@@ -128,7 +141,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Contact</label>
-                    <input minlength="10" maxlength="10" name="phone" type="tel" class="form-control" id="phone" placeholder="Enter contact no." required>
+                    <input minlength="10" maxlength="10" name="phone" type="tel" pattern="[0-9]{10}" class="form-control" id="phone" placeholder="Enter contact no." required>
                 </div>
 
                 <div class="mb-3">
@@ -150,6 +163,7 @@ if (isset($_POST['submit'])) {
     </div>
 
     <?php include 'footer.php' ?>
+
 </body>
 
 </html>
