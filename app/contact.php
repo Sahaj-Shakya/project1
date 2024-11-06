@@ -4,7 +4,7 @@ include "connection.php";
 
 session_start();
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
-$user_email = $_SESSION['email'];
+$user_email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
 $error = false;
 $message = '';
@@ -123,7 +123,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter email" required>
+                    <input type="email" name="email" value="<?php echo $user_email ?>" class="form-control" id="email" placeholder="Enter email" required>
                 </div>
 
                 <div class="mb-3">
