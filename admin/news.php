@@ -42,6 +42,20 @@ $result = mysqli_query($conn, $news_query);
                 </div>
             </div>
 
+            <?php if (isset($_SESSION['admin_message'])): ?>
+                <div class="container mt-2">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                <?php echo $_SESSION['admin_message']; ?>
+                                <?php unset($_SESSION['admin_message']); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px;">
                 <div class="container p-3">
                     <h4 class="text-center">News</h4>

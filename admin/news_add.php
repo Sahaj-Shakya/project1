@@ -1,8 +1,8 @@
 <?php
 session_start();
-$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : ''; 
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
 
-if($admin === ''){
+if ($admin === '') {
     header('Location: login.php');
 }
 
@@ -10,6 +10,36 @@ include "../app/connection.php";
 
 $news_query = "SELECT * FROM `news`";
 $result = mysqli_query($conn, $news_query);
+
+if (isset($_POST['submit'])) {
+    $title = $_POST['title'];
+    $desc = $_POST['description'];
+    // $img = $_POST['img'];
+
+
+    $img = $_FILES['img']['name'];
+    // echo $img;
+    $img_tmp = $_FILES['img']['tmp_name'];
+
+
+    $target_directory = '../images/';
+    $target_file = $target_directory . basename($img);
+
+    if (move_uploaded_file($img_tmp, $target_file)) {
+        $insert_query = "INSERT INTO `news` (`title`, `description`, `image`, `created/edited_by`) VALUES ('$title', '$desc', '$target_file', '$admin');";
+
+        if (mysqli_query($conn, $insert_query)) {
+            $_SESSION['admin_message'] = 'News added!';
+            header('Location: news.php');
+        }
+        //  else {
+        //     $message = "Error: " . mysqli_error($conn);
+        //     echo $message;
+        // }
+    } else {
+        $_SESSION['admin_message'] = 'file is not uploaded!';
+    }
+}
 
 ?>
 
@@ -47,7 +77,7 @@ $result = mysqli_query($conn, $news_query);
                 <div class="container p-3">
                     <h4 class="text-center">Add News</h4>
                     <hr>
-                    <form method="post">
+                    <form method="post" action="news_add.php" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label">News Title</label>
                             <input type="text" name="title" class="form-control" placeholder="Enter title" required>
