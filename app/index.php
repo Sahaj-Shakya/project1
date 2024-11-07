@@ -74,12 +74,15 @@ $output_array = json_decode($output, true);
                 <h4>Recent News</h4>
                 <hr>
                 <ul class="list-group" style="max-height: 296px; overflow-y:auto;">
+                    <?php $counter = 0;?>
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <?php 
+                        if($counter === 5) break;
                         $title = $row['title'];
                         $sn = $row['sn'];
                         ?>
                     <li class="list-group-item"> <?php echo "<a href='news_view.php?sn=$sn'>$title</a>"; ?></li>
+                    <?php $counter ++?>
                     <?php endwhile; ?>
 
                 </ul>

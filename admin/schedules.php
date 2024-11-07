@@ -3,7 +3,8 @@
 include "../app/connection.php";
 
 $schedules_query = "SELECT * FROM `schedules`";
-$result = mysqli_query($conn, $news_query);
+$result = mysqli_query($conn, $schedules_query);
+
 
 ?>
 
@@ -36,9 +37,9 @@ $result = mysqli_query($conn, $news_query);
                 </div>
             </div>
 
-            <div class="container border p-2" style="border-radius: 10px; max-width: 1100px;">
+            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px;">
                 <div class="container p-3">
-                    <h4 class="text-center">Schedules</h4>
+                    <h4 class="text-center">Exam Schedules</h4>
                     <hr>
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <?php
@@ -46,8 +47,8 @@ $result = mysqli_query($conn, $news_query);
                         $title = $row['title'];
                         ?>
                         <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <h5 style="max-width: 840px;" class="d-flex align-items-center"><?php echo $title ?></h5>
+                            <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
+                                <p style="max-width: 840px; font-size: large;"><?php echo $title ?></p>
                                 <div class="actions">
                                     <a href="schedules_edit.php?=<?php echo $sn;?>" class="btn btn-warning">Edit</a>
                                     <a href="schedules_delete.php?=<?php echo $sn;?>" class="btn btn-danger">Delete</a>
