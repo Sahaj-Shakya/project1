@@ -1,4 +1,10 @@
 <?php
+session_start();
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : ''; 
+
+if($admin === ''){
+    header('Location: login.php');
+}
 
 include "../app/connection.php";
 
@@ -37,7 +43,7 @@ $result = mysqli_query($conn, $news_query);
                 </div>
             </div>
 
-            <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1100px;">
+            <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1000px;">
                 <div class="container p-3">
                     <h4 class="text-center">Add News</h4>
                     <hr>

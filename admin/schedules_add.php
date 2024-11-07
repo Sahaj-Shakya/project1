@@ -1,12 +1,46 @@
 <?php
+session_start();
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
+
+if ($admin === '') {
+    header('Location: login.php');
+}
 
 include "../app/connection.php";
 
 $schedules_query = "SELECT * FROM `schedules`";
 $result = mysqli_query($conn, $schedules_query);
 
-if(isset($_POST['submit'])){
-    
+if (isset($_POST['submit'])) {
+    $title = $_POST['title'];
+    $start_date = $_POST['start'];
+    $end_date = $_POST['end'];
+    $time = $_POST['time'];
+    // $img = $_POST['img'];
+
+
+    $img = $_FILES['img']['name'];
+    // echo $img;
+    $img_tmp = $_FILES['img']['tmp_name'];
+
+
+    $target_directory = '../images/';
+    $target_file = $target_directory . basename($img);
+
+    if (move_uploaded_file($img_tmp, $target_file)) {
+        $insert_query = "INSERT INTO `schedules` (`title`, `start_date`, `end_date`, `time`, `image`, `created/edited_by`) VALUES ('$title', '$start_date', '$end_date', '$time', '$target_file', '$admin');";
+
+        if (mysqli_query($conn, $insert_query)) {
+            $_SESSION['admin_message'] = 'Schedule added!';
+            header('Location: schedules.php');
+        }
+        //  else {
+        //     $message = "Error: " . mysqli_error($conn);
+        //     echo $message;
+        // }
+    } else {
+        $_SESSION['admin_message'] = 'file is not uploaded!';
+    }
 }
 
 ?>
@@ -41,11 +75,25 @@ if(isset($_POST['submit'])){
                 </div>
             </div>
 
-            <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1100px;">
+            <?php if (isset($_SESSION['admin_message'])): ?>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                <?php echo $_SESSION['admin_message']; ?>
+                                <?php unset($_SESSION['admin_message']); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1000px;">
                 <div class="container p-3">
                     <h4 class="text-center">Add Schedules</h4>
                     <hr>
-                    <form method="post" action="schedules_add.php">
+                    <form method="post" action="schedules_add.php" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label">Schedule Title</label>
                             <input type="text" name="title" class="form-control" placeholder="Enter title" required>
@@ -59,6 +107,11 @@ if(isset($_POST['submit'])){
                         <div class="mb-3">
                             <label for="end" class="form-label">End Date</label>
                             <input name="end" class="form-control" type="date" id="end" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Time</label>
+                            <input name="time" class="form-control" type="text" id="time" required>
                         </div>
 
                         <div class="mb-3">
@@ -97,8 +150,8 @@ if(isset($_POST['submit'])){
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
-                    imgPreview.src = e.target.result; 
-                    imgPreview.style.display = 'block'; 
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
                 };
 
                 reader.readAsDataURL(file);

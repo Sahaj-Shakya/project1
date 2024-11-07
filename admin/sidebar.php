@@ -1,3 +1,8 @@
+<?php
+session_start();
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : ''; 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,9 +62,9 @@
                     <div class="left d-flex align-items-center">
                         <a href="profile.php" class="profile d-flex align-items-center">
                             <i class="bi bi-person-circle me-2"></i>
-                            <p class="m-0 text-nowrap">Super admin</p>
+                            <p class="m-0 text-nowrap"><?php echo $admin; ?></p>
                         </a>
-                        <a href="#" title="logout" class="btn ms-3" style="color: red;">
+                        <a href="logout.php" title="logout" class="btn ms-3" style="color: red;">
                             <i class="bi bi-box-arrow-left m-0"></i>
                         </a>
                     </div>

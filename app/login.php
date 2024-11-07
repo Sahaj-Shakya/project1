@@ -8,19 +8,8 @@ if($username != ''){
 
 include 'connection.php';
 
-$error = false;
 $message = '';
 
-// function validate($email, $password){
-//     global $error, $message;
-
-//     if (trim($email) === '' || trim($password) === '') {
-//         $error = true;
-//         $message = 'Fill all the form fields.';
-//         return false;
-//     }
-
-// }
 
 if(isset($_POST['login'])){
 
@@ -60,7 +49,7 @@ if(isset($_POST['login'])){
 
     <?php include 'nav.php'?>
 
-    <?php if ($error == true || $message != ''): ?>
+    <?php if ($message != ''): ?>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-sm-10 col-md-8 col-lg-6">
