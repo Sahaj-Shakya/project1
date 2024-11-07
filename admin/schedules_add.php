@@ -97,7 +97,7 @@ if (isset($_POST['submit'])) {
 
                         <div class="mb-3">
                             <label for="time" class="form-label">Time</label>
-                            <input name="time" class="form-control" type="text" id="time" required>
+                            <input name="time" class="form-control" type="text" placeholder="Enter time(eg: 1am - 2am)" id="time" required>
                         </div>
 
                         <div class="mb-3">
