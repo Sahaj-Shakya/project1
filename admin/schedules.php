@@ -70,8 +70,8 @@ $result = mysqli_query($conn, $schedules_query);
                             <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
                                 <p style="max-width: 840px; font-size: large;"><?php echo $title ?></p>
                                 <div class="actions">
-                                    <a href="schedules_edit.php?=<?php echo $sn;?>" class="btn btn-warning">Edit</a>
-                                    <a href="schedules_delete.php?=<?php echo $sn;?>" class="btn btn-danger">Delete</a>
+                                    <a href="schedules_edit.php?sn=<?php echo $sn;?>" class="btn btn-warning">Edit</a>
+                                    <a href="schedules_delete.php?sn=<?php echo $sn;?>" class="btn btn-danger">Delete</a>
                                 </div>
                             </li>
                         </ul>

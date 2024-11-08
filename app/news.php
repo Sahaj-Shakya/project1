@@ -36,7 +36,7 @@ $result = mysqli_query($conn, $news_query);
                     <div class='container_details col-md-8 mb-3'>
                         <h4 style='display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;'><?php echo $title ?></h4>
                         <p style='display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;'><?php echo $description ?></p>
-                        <a href='news_view.php?sn=<?php echo $sn ?>' class='btn btn-outline-primary'>See more</a>
+                        <a href='news_view.php?sn=<?php echo $sn; ?>' class='btn btn-outline-primary'>See more</a>
                     </div>
                 </div>
             </div>
