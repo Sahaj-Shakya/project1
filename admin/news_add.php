@@ -11,6 +11,36 @@ include "../app/connection.php";
 $news_query = "SELECT * FROM `news`";
 $result = mysqli_query($conn, $news_query);
 
+$error = false;
+$message = '';
+
+function validate($title, $desc, $img)
+{
+    global $error, $message;
+    if (trim($title) === '' || trim($desc) === '' || trim($img) === '') {
+        $error = true;
+        $message = 'Fill all the form fields.';
+        return false;
+    }
+
+    if (strlen($title) > 255) {
+        $error = true;
+        $message = 'Title is too long.';
+        return false;
+    }
+
+    $extentions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $file_extension = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+
+    if (!in_array($file_extension, $extentions)) {
+        $error = true;
+        $message = 'Invalid image file type.';
+        return false;
+    }
+
+    return true;
+}
+
 if (isset($_POST['submit'])) {
     $title = $_POST['title'];
     $desc = $_POST['description'];
@@ -25,19 +55,21 @@ if (isset($_POST['submit'])) {
     $target_directory = '../images/';
     $target_file = $target_directory . basename($img);
 
-    if (move_uploaded_file($img_tmp, $target_file)) {
-        $insert_query = "INSERT INTO `news` (`title`, `description`, `image`, `created/edited_by`) VALUES ('$title', '$desc', '$target_file', '$admin');";
-
-        if (mysqli_query($conn, $insert_query)) {
-            $_SESSION['admin_message'] = 'News added!';
-            header('Location: news.php');
+    if (validate($title, $desc, $img)){
+        if (move_uploaded_file($img_tmp, $target_file)) {
+            $insert_query = "INSERT INTO `news` (`title`, `description`, `image`, `created/edited_by`) VALUES ('$title', '$desc', '$target_file', '$admin');";
+    
+            if (mysqli_query($conn, $insert_query)) {
+                $_SESSION['admin_message'] = 'News added!';
+                header('Location: news.php');
+            }
+            //  else {
+            //     $message = "Error: " . mysqli_error($conn);
+            //     echo $message;
+            // }
+        } else {
+            $_SESSION['admin_message'] = 'file can\'t be uploaded!';
         }
-        //  else {
-        //     $message = "Error: " . mysqli_error($conn);
-        //     echo $message;
-        // }
-    } else {
-        $_SESSION['admin_message'] = 'file is not uploaded!';
     }
 }
 
@@ -72,6 +104,19 @@ if (isset($_POST['submit'])) {
                     <a href="news_add.php" class="btn btn-primary">something</a>
                 </div>
             </div>
+
+            <?php if ($error === true): ?>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                <?php echo $message ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1000px;">
                 <div class="container p-3">
@@ -124,8 +169,8 @@ if (isset($_POST['submit'])) {
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
-                    imgPreview.src = e.target.result; 
-                    imgPreview.style.display = 'block'; 
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
                 };
 
                 reader.readAsDataURL(file);

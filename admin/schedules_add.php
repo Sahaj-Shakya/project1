@@ -11,6 +11,50 @@ include "../app/connection.php";
 $schedules_query = "SELECT * FROM `schedules`";
 $result = mysqli_query($conn, $schedules_query);
 
+$error = false;
+$message = '';
+
+function validate($title, $start_date, $end_date, $time, $img)
+{
+    global $error, $message;
+    if (trim($title) === '' || trim($start_date) === '' || trim($end_date) === '' || trim($img) === '' || trim($time) === '') {
+        $error = true;
+        $message = 'Fill all the form fields.';
+        return false;
+    }
+
+    if (strlen($title) > 255) {
+        $error = true;
+        $message = 'Title is too long.';
+        return false;
+    }
+
+    $start_date_obj = DateTime::createFromFormat('Y-m-d', $start_date);
+    $end_date_obj = DateTime::createFromFormat('Y-m-d', $end_date);
+    if (!$start_date_obj || !$end_date_obj || $start_date_obj->format('Y-m-d') !== $start_date || $end_date_obj->format('Y-m-d') !== $end_date) {
+        $error = true;
+        $message = 'Invalid date format. Please use YYYY-MM-DD.';
+        return false;
+    }
+
+    if ($start_date_obj > $end_date_obj) {
+        $error = true;
+        $message = 'Start date cannot be greater than end date.';
+        return false;
+    }
+
+    $extentions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $file_extension = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+
+    if (!in_array($file_extension, $extentions)) {
+        $error = true;
+        $message = 'Invalid image file type.';
+        return false;
+    }
+
+    return true;
+}
+
 if (isset($_POST['submit'])) {
     $title = $_POST['title'];
     $start_date = $_POST['start'];
@@ -27,19 +71,21 @@ if (isset($_POST['submit'])) {
     $target_directory = '../images/';
     $target_file = $target_directory . basename($img);
 
-    if (move_uploaded_file($img_tmp, $target_file)) {
-        $insert_query = "INSERT INTO `schedules` (`title`, `start_date`, `end_date`, `time`, `image`, `created/edited_by`) VALUES ('$title', '$start_date', '$end_date', '$time', '$target_file', '$admin');";
+    if (validate($title, $start_date, $end_date, $time, $img)) {
+        if (move_uploaded_file($img_tmp, $target_file)) {
+            $insert_query = "INSERT INTO `schedules` (`title`, `start_date`, `end_date`, `time`, `image`, `created/edited_by`) VALUES ('$title', '$start_date', '$end_date', '$time', '$target_file', '$admin');";
 
-        if (mysqli_query($conn, $insert_query)) {
-            $_SESSION['admin_message'] = 'Schedule added!';
-            header('Location: schedules.php');
+            if (mysqli_query($conn, $insert_query)) {
+                $_SESSION['admin_message'] = 'Schedule added!';
+                header('Location: schedules.php');
+            }
+            //  else {
+            //     $message = "Error: " . mysqli_error($conn);
+            //     echo $message;
+            // }
+        } else {
+            $_SESSION['admin_message'] = 'file is not uploaded!';
         }
-        //  else {
-        //     $message = "Error: " . mysqli_error($conn);
-        //     echo $message;
-        // }
-    } else {
-        $_SESSION['admin_message'] = 'file is not uploaded!';
     }
 }
 
@@ -75,6 +121,19 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
 
+            <?php if ($error === true): ?>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                <?php echo $message ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1000px;">
                 <div class="container p-3">
                     <h4 class="text-center">Add Schedules</h4>
@@ -97,7 +156,7 @@ if (isset($_POST['submit'])) {
 
                         <div class="mb-3">
                             <label for="time" class="form-label">Time</label>
-                            <input name="time" class="form-control" type="text" placeholder="Enter time(eg: 1am - 2am)" id="time" required>
+                            <input name="time" class="form-control" type="text" maxlength="20" placeholder="Enter time(eg: 1am - 2am)" id="time" required>
                         </div>
 
                         <div class="mb-3">
