@@ -30,11 +30,12 @@ function validate($title, $desc)
     return true;
 }
 
-function validate_img($img){
+function validate_img($new_img)
+{
 
     global $error, $message;
     $extentions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    $file_extension = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+    $file_extension = strtolower(pathinfo($new_img, PATHINFO_EXTENSION));
 
     if (!in_array($file_extension, $extentions)) {
         $error = true;
@@ -45,7 +46,7 @@ function validate_img($img){
     return true;
 }
 
-if(isset($_GET['sn'])){
+if (isset($_GET['sn'])) {
     $sn = $_GET['sn'];
 
     $news_query = "SELECT * FROM `news` WHERE `sn` = '$sn' LIMIT 1;";
@@ -57,11 +58,11 @@ if(isset($_GET['sn'])){
     $old_title = $row['title'];
     $old_desc = $row['description'];
     $old_img = $row['img'];
-}else{
+} else {
     header('Location: news.php');
 }
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
     $new_title = $_POST['title'];
     $new_desc = $_POST['description'];
     $new_img = $_FILES['img']['name'] ?? '';
@@ -71,37 +72,59 @@ if(isset($_POST['submit'])){
     //     exit;
     // }
 
-    if ($new_img !== ''){
+    if ($new_img !== '') {
         $img_tmp = $_FILES['img']['tmp_name'];
-    
+
         $target_directory = '../images/';
-        $target_file = $target_directory . basename($img);
+        $target_file = $target_directory . basename($new_img);
 
         if (validate($new_title, $new_desc)) {
-            if(validate_img($new_img)){
+            if (validate_img($new_img)) {
                 if (move_uploaded_file($img_tmp, $target_file)) {
                     $update_query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `image` = '$target_file', `created/edited_by` = '$admin' WHERE `news`.`sn` = $sn;";
                     $update_result = mysqli_query($conn, $update_query);
 
-                    if($update_result){
+                    if ($update_result) {
                         $_SESSION['admin_message'] = 'News Edited.';
                         header('Location: news.php');
                         exit;
-                    }else{
+                    } else {
                         $_SESSION['admin_message'] = 'Something went wrong!.';
                         header('Location: news.php');
                         exit;
                     }
-                }else{
+                } else {
                     $error = true;
                     $message = 'File can\'t be uploaded';
                 }
+            } else {
+                $error = true;
+                $message = 'Something wrong with image.';
             }
+        } else {
+            $error = true;
+            $message = 'Something went wrong.';
+        }
+    } 
+    if ($new_img === '') {
+        if (validate($new_title, $new_desc)) {
+            $update_query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `created/edited_by` = '$admin' WHERE `news`.`sn` = $sn;";
+            $update_result = mysqli_query($conn, $update_query);
+
+            if ($update_result) {
+                $_SESSION['admin_message'] = 'News Edited.';
+                header('Location: news.php');
+                exit;
+            } else {
+                $_SESSION['admin_message'] = 'Something went wrong!.';
+                header('Location: news.php');
+                exit;
+            }
+        } else {
+            $error = true;
+            $message = 'Something wrong with image.';
         }
     }
-
-    
-
 }
 
 
@@ -129,7 +152,7 @@ if(isset($_POST['submit'])){
                         <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                         <li class="breadcrumb-item"><a href="dashboard.php">Admin</a></li>
                         <li class="breadcrumb-item"><a href="news.php">News</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add News</li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit News</li>
                     </ol>
                 </nav>
                 <div class="add mt-4 me-3">
@@ -170,13 +193,13 @@ if(isset($_POST['submit'])){
                             <input name="img" type="file" class="form-control" id="img-input" accept="image/*">
 
                             <div class="img-preview mt-2">
-                                <img id="img-preview" src="#" alt="Image Preview" style="display: none; max-width: 20%; height: auto;" />
+                                <img id="img-preview" src="<?php echo $old_img; ?>" alt="Image Preview" style="display: none; max-width: 20%; height: auto;" />
                             </div>
                         </div>
 
 
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" name="submit" class="btn btn-outline-primary">Add</button>
+                            <button type="submit" name="submit" class="btn btn-outline-primary">Update</button>
                             <a href="news.php" class="btn btn-outline-danger">Cancel</a>
                         </div>
                     </form>
