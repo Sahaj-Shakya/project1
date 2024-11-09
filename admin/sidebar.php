@@ -48,7 +48,7 @@ $admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
                     <p>Schedules</p>
                     <div class="right"><i class="bi bi-calendar-check ms-2"></i></div>
                 </a>
-                <a href="contact.php" class="sidebar-content mb-4 d-flex" <?php echo basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'style="color: black;"' : ''; ?>>
+                <a href="contact_us.php" class="sidebar-content mb-4 d-flex" <?php echo basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'style="color: black;"' : ''; ?>>
                     <p>Contact us</p>
                     <div class="right"><i class="bi bi-envelope-at ms-2"></i></div>
                 </a>

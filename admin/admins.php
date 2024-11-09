@@ -9,9 +9,6 @@ if ($admin === '') {
 
 include '../app/connection.php';
 
-$users_query = "SELECT * FROM `user`";
-$users_result = mysqli_query($conn, $users_query);
-
 $superuser_query = "SELECT * FROM `admin`";
 $superuser_result = mysqli_query($conn, $superuser_query);
 
@@ -38,11 +35,12 @@ $superuser_result = mysqli_query($conn, $superuser_query);
                     <ol class="breadcrumb mt-4 ms-3">
                         <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                         <li class="breadcrumb-item"><a href="dashboard.php">Admin</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        <li class="breadcrumb-item"><a href="users.php">Users</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Super Users</li>
                     </ol>
                 </nav>
                 <div class="add mt-4 me-3">
-                    <a href="admins.php" class="btn btn-primary">View Super Users</a>
+                    <a href="users.php" class="btn btn-primary">Back</a>
                 </div>
             </div>
 
@@ -62,21 +60,27 @@ $superuser_result = mysqli_query($conn, $superuser_query);
 
             <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 900px; overflow-y: scroll; max-height: 800px;">
                 <div class="container p-3">
-                    <h4 class="text-center">Users</h4>
+                    <h4 class="text-center">Super Users</h4>
                     <hr>
-                    <?php while ($row = mysqli_fetch_assoc($users_result)): ?>
+                    <?php while ($row = mysqli_fetch_assoc($superuser_result)): ?>
                         <?php
                         $sn = $row['sn'];
-                        $username = $row['username'];
+                        $username = $row['name'];
                         // $title = $row['email'];
                         ?>
                         <ul class="list-group">
                             <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
-                                <p style="max-width: 840px; font-size: large;"><?php echo $username ?></p>
+                                <p style="max-width: 840px; font-size: large;"><?php echo $username; ?></p>
                                 <div class="actions">
-                                    <a href="schedules_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
-                                    <a href="schedules_delete.php?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
+                                    <?php if ($username === 'super admin'): ?>
+                                        <button class="btn btn-warning disabled" aria-disabled="true">Edit</button>
+                                        <button class="btn btn-danger disabled" aria-disabled="true">Delete</button>
+                                    <?php else: ?>
+                                        <a href="schedules_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
+                                        <a href="schedules_delete.php?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
+                                    <?php endif; ?>
                                 </div>
+
                             </li>
                         </ul>
                     <?php endwhile; ?>
