@@ -8,18 +8,6 @@ if ($admin === '') {
 
 include "../app/connection.php";
 
-if (isset($_GET['sn'])) {
-    $sn = $_GET['sn'];
-    
-    $news_query = "SELECT * FROM `news` WHERE `sn` = $sn LIMIT 1";
-    $result = mysqli_query($conn, $news_query);
-    
-    $row = mysqli_fetch_assoc($result);
-    
-    $old_title = $row['title'];
-    $old_desc = $row['description'];
-    $old_img = $row['image'];
-}
 
 $error = false;
 $message = '';
@@ -57,66 +45,64 @@ function validate_img($img){
     return true;
 }
 
-if (isset($_POST['submit'])) {
-    $title = $_POST['title'];
-    $desc = $_POST['description'];
-    $img = $_FILES['img']['name'] ?? '';
+if(isset($_GET['sn'])){
+    $sn = $_GET['sn'];
 
-    if ($old_title === $title && $old_desc === $desc && $img === ''){
-        header('Location: news.php');
-        exit;
-    }
+    $news_query = "SELECT * FROM `news` WHERE `sn` = '$sn' LIMIT 1;";
+    $news_result = mysqli_query($conn, $news_query);
 
+    $row = mysqli_fetch_assoc($news_result);
 
-    if ($img !== '') {
+    $sn = $row['sn'];
+    $old_title = $row['title'];
+    $old_desc = $row['description'];
+    $old_img = $row['img'];
+}else{
+    header('Location: news.php');
+}
 
-        // echo $img;
+if(isset($_POST['submit'])){
+    $new_title = $_POST['title'];
+    $new_desc = $_POST['description'];
+    $new_img = $_FILES['img']['name'] ?? '';
+
+    // if($new_title === $old_title && $new_desc === $old_desc && $new_img === ''){
+    //     header('Location: news.php');
+    //     exit;
+    // }
+
+    if ($new_img !== ''){
         $img_tmp = $_FILES['img']['tmp_name'];
-
-
+    
         $target_directory = '../images/';
         $target_file = $target_directory . basename($img);
 
-        if (validate($title, $desc)) {
-            if(validate_img($img)){
+        if (validate($new_title, $new_desc)) {
+            if(validate_img($new_img)){
                 if (move_uploaded_file($img_tmp, $target_file)) {
-                    $insert_query = "UPDATE `news` SET `title` = '$title', `description` = '$desc', `image` = '$target_file', `created/edited_by` = '$admin' WHERE `sn` = '$sn';";
-    
-                    if (mysqli_query($conn, $insert_query)) {
-                        $_SESSION['admin_message'] = 'News Edited!';
+                    $update_query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `image` = '$target_file', `created/edited_by` = '$admin' WHERE `news`.`sn` = $sn;";
+                    $update_result = mysqli_query($conn, $update_query);
+
+                    if($update_result){
+                        $_SESSION['admin_message'] = 'News Edited.';
                         header('Location: news.php');
+                        exit;
+                    }else{
+                        $_SESSION['admin_message'] = 'Something went wrong!.';
+                        header('Location: news.php');
+                        exit;
                     }
-                    //  else {
-                    //     $message = "Error: " . mysqli_error($conn);
-                    //     echo $message;
-                    // }
-                } else {
-                    $_SESSION['admin_message'] = 'file can\'t be uploaded!';
+                }else{
+                    $error = true;
+                    $message = 'File can\'t be uploaded';
                 }
             }
-            
-        }
-    } else {
-        $title = $_POST['title'];
-        $desc = $_POST['description'];
-        $img = $old_img;
-
-        if (validate($title, $desc)) {
-
-            $insert_query = "UPDATE `news` SET `title` = '$title', `description` = '$desc', `image` = '$img', `created/edited_by` = '$admin' WHERE `news`.`sn` = '$sn';";
-
-            if (mysqli_query($conn, $insert_query)) {
-                $_SESSION['admin_message'] = 'News Edited!';
-                header('Location: news.php');
-            }
-            //  else {
-            //     $message = "Error: " . mysqli_error($conn);
-            //     echo $message;
-            // }
         }
     }
-}
 
+    
+
+}
 
 
 ?>
@@ -174,9 +160,9 @@ if (isset($_POST['submit'])) {
                             <input type="text" name="title" class="form-control" value="<?php echo $old_title; ?>" placeholder="Enter title" required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="description" class="form-label">News Description</label>
-                            <textarea rows="6" cols="30" name="description" class="form-control" id="description" placeholder="Enter description" required><?php echo htmlspecialchars($old_desc); ?></textarea>
+                            <textarea rows="7" cols="30" name="description" class="form-control" id="description" placeholder="Enter description" required><?php echo htmlspecialchars($old_desc); ?></textarea>
                         </div>
 
                         <div class="mb-3">
