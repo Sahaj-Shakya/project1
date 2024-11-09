@@ -56,7 +56,7 @@ $result = mysqli_query($conn, $contact_query);
                 </div>
             <?php endif; ?>
 
-            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px; overflow-y: scroll; max-height: 800px;">
+            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px; overflow-y: scroll; max-height: 750px;">
                 <div class="container p-3">
                     <h4 class="text-center">Contact us</h4>
                     <hr>
@@ -76,8 +76,8 @@ $result = mysqli_query($conn, $contact_query);
                                     <td><?php echo $row['name']; ?></td>
                                     <td><?php echo $row['email']; ?></td>
                                     <td>
-                                        <a href="schedules_edit.php?sn=<?php echo $row['sn']; ?>" class="btn btn-warning">View</a>
-                                        <a href="schedules_delete.php?sn=<?php echo $row['sn']; ?>" class="btn btn-danger">Delete</a>
+                                        <a href="#?sn=<?php echo $row['sn']; ?>" class="btn btn-warning">View</a>
+                                        <a href="#?sn=<?php echo $row['sn']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

@@ -56,7 +56,7 @@ $result = mysqli_query($conn, $news_query);
                 </div>
             <?php endif; ?>
 
-            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px;">
+            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px; overflow-y: scroll; max-height: 750px;">
                 <div class="container p-3">
                     <h4 class="text-center">News</h4>
                     <hr>

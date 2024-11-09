@@ -58,7 +58,7 @@ $superuser_result = mysqli_query($conn, $superuser_query);
                 </div>
             <?php endif; ?>
 
-            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 900px; overflow-y: scroll; max-height: 800px;">
+            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 900px; overflow-y: scroll; max-height: 750px;">
                 <div class="container p-3">
                     <h4 class="text-center">Super Users</h4>
                     <hr>
@@ -76,8 +76,8 @@ $superuser_result = mysqli_query($conn, $superuser_query);
                                         <button class="btn btn-warning disabled" aria-disabled="true">Edit</button>
                                         <button class="btn btn-danger disabled" aria-disabled="true">Delete</button>
                                     <?php else: ?>
-                                        <a href="schedules_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
-                                        <a href="schedules_delete.php?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
+                                        <a href="#?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
+                                        <a href="#?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
                                     <?php endif; ?>
                                 </div>
 
