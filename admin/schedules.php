@@ -1,14 +1,14 @@
 <?php
 session_start();
-$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : ''; 
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
 
-if($admin === ''){
+if ($admin === '') {
     header('Location: login.php');
 }
 
 include "../app/connection.php";
 
-$schedules_query = "SELECT * FROM `schedules`";
+$schedules_query = "SELECT * FROM `schedules` ORDER BY `sn` DESC";
 $result = mysqli_query($conn, $schedules_query);
 
 
@@ -70,8 +70,8 @@ $result = mysqli_query($conn, $schedules_query);
                             <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
                                 <p style="max-width: 840px; font-size: large;"><?php echo $title ?></p>
                                 <div class="actions">
-                                    <a href="schedules_edit.php?sn=<?php echo $sn;?>" class="btn btn-warning">Edit</a>
-                                    <a href="schedules_delete.php?sn=<?php echo $sn;?>" class="btn btn-danger">Delete</a>
+                                    <a href="schedules_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
+                                    <button class="btn btn-danger" onclick="showConfirmation(<?php echo $sn; ?>)">Delete</button>
                                 </div>
                             </li>
                         </ul>
@@ -83,7 +83,14 @@ $result = mysqli_query($conn, $schedules_query);
 
     <?php include "sidebar.php" ?>
 
-
+    <script>
+        function showConfirmation(sn) {
+            if (confirm("Confirm Delete?")) {
+                // User clicked "Yes"
+                window.location = `schedules_delete.php?sn=${sn}`
+            }
+        }
+    </script>
 
 
 </body>

@@ -1,14 +1,14 @@
 <?php
 session_start();
-$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : ''; 
+$admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
 
-if($admin === ''){
+if ($admin === '') {
     header('Location: login.php');
 }
 
 include "../app/connection.php";
 
-$news_query = "SELECT * FROM `news`";
+$news_query = "SELECT * FROM `news` ORDER BY `sn` DESC";
 $result = mysqli_query($conn, $news_query);
 
 ?>
@@ -70,7 +70,8 @@ $result = mysqli_query($conn, $news_query);
                                 <p style="max-width: 840px; font-size:large;"><?php echo $title ?></p>
                                 <div class="actions">
                                     <a href="news_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
-                                    <a href="news_delete.php?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
+                                    <button class="btn btn-danger" onclick="showConfirmation(<?php echo $sn; ?>)">Delete</button>
+
                                 </div>
                             </li>
                         </ul>
@@ -83,8 +84,14 @@ $result = mysqli_query($conn, $news_query);
 
     <?php include "sidebar.php" ?>
 
-
-
+    <script>
+        function showConfirmation(sn) {
+            if (confirm("Confirm Delete?")) {
+                // User clicked "Yes"
+                window.location = `news_delete.php?sn=${sn}`
+            }
+        }
+    </script>
 
 </body>
 

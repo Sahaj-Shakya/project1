@@ -19,6 +19,12 @@ function validate($name, $email, $phone, $subject, $user_message)
         return false;
     }
 
+    if (strlen($subject) > 100){
+        $error = true;
+        $message = 'Subject is too long.';
+        return false;
+    }
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
         $message = 'Invalid email address.';

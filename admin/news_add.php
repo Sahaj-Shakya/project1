@@ -29,7 +29,7 @@ function validate($title, $desc, $img)
         return false;
     }
 
-    $extentions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $extentions = ['jpg', 'jpeg', 'png', 'webp'];
     $file_extension = strtolower(pathinfo($img, PATHINFO_EXTENSION));
 
     if (!in_array($file_extension, $extentions)) {
@@ -87,8 +87,7 @@ if (isset($_POST['submit'])) {
 <body>
     <div class="main">
         <?php include "leftside.php" ?>
-
-
+        
 
         <div class="right-side">
             <div class="bread d-flex justify-content-between">
@@ -104,6 +103,20 @@ if (isset($_POST['submit'])) {
                     <a href="news_add.php" class="btn btn-primary">something</a>
                 </div>
             </div>
+
+            <?php if (isset($_SESSION['admin_message']) === 'file can\'t be uploaded!'): ?>
+                <div class="container mt-2">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                <?php echo $_SESSION['admin_message']; ?>
+                                <?php unset($_SESSION['admin_message']); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php if ($error === true): ?>
                 <div class="container mt-5">

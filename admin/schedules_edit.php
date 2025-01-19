@@ -12,23 +12,37 @@ include "../app/connection.php";
 $error = false;
 $message = '';
 
-// function validate($title, $desc)
-// {
-//     global $error, $message;
-//     if (trim($title) === '' || trim($desc) === '') {
-//         $error = true;
-//         $message = 'Fill all the form fields.';
-//         return false;
-//     }
+function validate($title, $start_date, $end_date, $time)
+{
+    global $error, $message;
+    if (trim($title) === '' || trim($start_date) === '' || trim($end_date) === '' || trim($time) === '') {
+        $error = true;
+        $message = 'Fill all the form fields.';
+        return false;
+    }
 
-//     if (strlen($title) > 255) {
-//         $error = true;
-//         $message = 'Title is too long.';
-//         return false;
-//     }
+    if (strlen($title) > 255) {
+        $error = true;
+        $message = 'Title is too long.';
+        return false;
+    }
 
-//     return true;
-// }
+    $start_date_obj = DateTime::createFromFormat('Y-m-d', $start_date);
+    $end_date_obj = DateTime::createFromFormat('Y-m-d', $end_date);
+    if (!$start_date_obj || !$end_date_obj || $start_date_obj->format('Y-m-d') !== $start_date || $end_date_obj->format('Y-m-d') !== $end_date) {
+        $error = true;
+        $message = 'Invalid date format. Please use YYYY-MM-DD.';
+        return false;
+    }
+
+    if ($start_date_obj > $end_date_obj) {
+        $error = true;
+        $message = 'Start date cannot be greater than end date.';
+        return false;
+    }
+
+    return true;
+}
 
 function validate_img($new_img)
 {
@@ -59,9 +73,53 @@ if (isset($_GET['sn'])) {
     $old_start_date = $row['start_date'];
     $old_end_date = $row['end_date'];
     $old_time = $row['time'];
-    $old_img = $row['img'];
-} else {
-    header('Location: news.php');
+    // $old_img = $row['img'];
+}
+
+if (isset($_POST['submit'])) {
+    $title = $_POST['title'];
+    $start = $_POST['start'];
+    $end = $_POST['end'];
+    $time = $_POST['time'];
+
+    $new_img = $_FILES['img']['name'];
+    // echo $img;
+    $img_tmp = $_FILES['img']['tmp_name'];
+
+
+    $target_directory = '../images/';
+    $target_file = $target_directory . basename($new_img);
+
+    if (validate($title, $start, $end, $time)) {
+
+        if ($new_img === '') {
+            $query = "UPDATE `schedules` SET `title` = '$title', `start_date` = '$start', `end_date` = '$end' WHERE `schedules`.`sn` = $sn;";
+            $result = mysqli_query($conn, $query);
+
+            if ($result) {
+                $_SESSION['admin_message'] = 'Schedules updated!';
+                header('Location: schedules.php');
+            } else {
+                $_SESSION['admin_message'] = 'Something went wrong!';
+                header('Location: schedules.php');
+            }
+        } else {
+            if (validate_img($new_img)) {
+                if (move_uploaded_file($img_tmp, $target_file)) {
+                    $query = "UPDATE `schedules` SET `title` = '$title', `start_date` = '$start', `end_date` = '$end', `image` = '$target_file' WHERE `schedules`.`sn` = $sn;";
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result) {
+                        $_SESSION['admin_message'] = 'Schedules updated!';
+                        header('Location: schedules.php');
+                    } else {
+                        $_SESSION['admin_message'] = 'Something went wrong!';
+                        header('Location: schedules.php');
+                    }
+                }
+            }
+        }
+    }
 }
 
 ?>
@@ -111,10 +169,10 @@ if (isset($_GET['sn'])) {
 
             <div class="container border p-2 shadow mt-5" style="border-radius: 10px; max-width: 1000px;">
                 <div class="container p-3">
-                    <h4 class="text-center">Edit News</h4>
+                    <h4 class="text-center">Edit Schedules</h4>
                     <hr>
-                    <form method="post" action="news_edit.php" enctype="multipart/form-data">
-                    <div class="mb-3">
+                    <form method="post" action="schedules_edit.php?sn=<?php echo $sn; ?>" enctype="multipart/form-data">
+                        <div class="mb-3">
                             <label for="title" class="form-label">Schedule Title</label>
                             <input type="text" name="title" class="form-control" value="<?php echo $old_title; ?>" placeholder="Enter title" required>
                         </div>
@@ -136,7 +194,7 @@ if (isset($_GET['sn'])) {
 
                         <div class="mb-3">
                             <label for="img" class="form-label">Image</label>
-                            <input name="img" type="file" class="form-control" id="img-input" required accept="image/*">
+                            <input name="img" type="file" class="form-control" id="img-input" accept="image/*">
 
                             <div class="img-preview mt-2">
                                 <img id="img-preview" src="#" alt="Image Preview" style="display: none; max-width: 20%; height: auto;" />
@@ -181,6 +239,8 @@ if (isset($_GET['sn'])) {
             }
         });
     </script>
+
+
 
 </body>
 

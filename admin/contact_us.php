@@ -8,7 +8,7 @@ if ($admin === '') {
 
 include "../app/connection.php";
 
-$contact_query = "SELECT * FROM `contact_us`";
+$contact_query = "SELECT * FROM `contact_us` ORDER BY `sn` DESC";
 $result = mysqli_query($conn, $contact_query);
 
 ?>
@@ -37,9 +37,6 @@ $result = mysqli_query($conn, $contact_query);
                         <li class="breadcrumb-item active" aria-current="page">Contact us</li>
                     </ol>
                 </nav>
-                <div class="add mt-4 me-3">
-                    <a href="schedules_add.php" class="btn btn-primary">Something</a>
-                </div>
             </div>
 
             <?php if (isset($_SESSION['admin_message'])): ?>
@@ -56,14 +53,14 @@ $result = mysqli_query($conn, $contact_query);
                 </div>
             <?php endif; ?>
 
-            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 1100px; overflow-y: scroll; max-height: 750px;">
+            <div class="container border p-2 mt-5" style="border-radius: 10px; max-width: 900px; overflow-y: scroll; max-height: 750px;">
                 <div class="container p-3">
                     <h4 class="text-center">Contact us</h4>
                     <hr>
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">S.No</th>
+                                <!-- <th scope="col">S.No</th> -->
                                 <th scope="col">Name</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Actions</th>
@@ -72,12 +69,12 @@ $result = mysqli_query($conn, $contact_query);
                         <tbody>
                             <?php while ($row = mysqli_fetch_assoc($result)): ?>
                                 <tr>
-                                    <td><?php echo $row['sn']; ?></td>
+                                    <!-- <td><?php echo $row['sn']; ?></td> -->
                                     <td><?php echo $row['name']; ?></td>
                                     <td><?php echo $row['email']; ?></td>
                                     <td>
-                                        <a href="#?sn=<?php echo $row['sn']; ?>" class="btn btn-warning">View</a>
-                                        <a href="#?sn=<?php echo $row['sn']; ?>" class="btn btn-danger">Delete</a>
+                                        <a href="contact_us_view.php?sn=<?php echo $row['sn']; ?>" class="btn btn-warning">View</a>
+                                        <!-- <a href="#?sn=<?php echo $row['sn']; ?>" class="btn btn-danger">Delete</a> -->
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

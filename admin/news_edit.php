@@ -46,6 +46,7 @@ function validate_img($new_img)
     return true;
 }
 
+
 if (isset($_GET['sn'])) {
     $sn = $_GET['sn'];
 
@@ -57,75 +58,54 @@ if (isset($_GET['sn'])) {
     $sn = $row['sn'];
     $old_title = $row['title'];
     $old_desc = $row['description'];
-    $old_img = $row['img'];
-} else {
-    header('Location: news.php');
-}
+} 
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])){
     $new_title = $_POST['title'];
     $new_desc = $_POST['description'];
-    $new_img = $_FILES['img']['name'] ?? '';
 
-    // if($new_title === $old_title && $new_desc === $old_desc && $new_img === ''){
-    //     header('Location: news.php');
-    //     exit;
-    // }
+    $new_img = $_FILES['image']['name'];
+    // echo $img;
+    $img_tmp = $_FILES['image']['tmp_name'];
 
-    if ($new_img !== '') {
-        $img_tmp = $_FILES['img']['tmp_name'];
 
-        $target_directory = '../images/';
-        $target_file = $target_directory . basename($new_img);
+    $target_directory = '../images/';
+    $target_file = $target_directory . basename($new_img);
 
-        if (validate($new_title, $new_desc)) {
-            if (validate_img($new_img)) {
-                if (move_uploaded_file($img_tmp, $target_file)) {
-                    $update_query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `image` = '$target_file', `created/edited_by` = '$admin' WHERE `news`.`sn` = $sn;";
-                    $update_result = mysqli_query($conn, $update_query);
+    if (validate($new_title, $new_desc)){
 
-                    if ($update_result) {
-                        $_SESSION['admin_message'] = 'News Edited.';
+        if ($new_img === ''){
+            $query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc' WHERE `news`.`sn` = $sn;";
+            $result = mysqli_query($conn, $query);
+    
+            if ($result){
+                $_SESSION['admin_message'] = 'News updated!';
+                header('Location: news.php');
+            }else{
+                $_SESSION['admin_message'] = 'Something went wrong!';
+                header('Location: news.php');
+            }
+        } else{
+            if (validate_img($new_img)){
+                if (move_uploaded_file($img_tmp, $target_file)){
+                    $query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `image` = '$target_file' WHERE `news`.`sn` = $sn;";
+                    $result = mysqli_query($conn, $query);
+        
+                    if ($result){
+                        $_SESSION['admin_message'] = 'News updated!';
                         header('Location: news.php');
-                        exit;
-                    } else {
-                        $_SESSION['admin_message'] = 'Something went wrong!.';
+                    }else{
+                        $_SESSION['admin_message'] = 'Something went wrong!';
                         header('Location: news.php');
-                        exit;
                     }
-                } else {
-                    $error = true;
-                    $message = 'File can\'t be uploaded';
                 }
-            } else {
-                $error = true;
-                $message = 'Something wrong with image.';
             }
-        } else {
-            $error = true;
-            $message = 'Something went wrong.';
-        }
-    } 
-    if ($new_img === '') {
-        if (validate($new_title, $new_desc)) {
-            $update_query = "UPDATE `news` SET `title` = '$new_title', `description` = '$new_desc', `created/edited_by` = '$admin' WHERE `news`.`sn` = $sn;";
-            $update_result = mysqli_query($conn, $update_query);
-
-            if ($update_result) {
-                $_SESSION['admin_message'] = 'News Edited.';
-                header('Location: news.php');
-                exit;
-            } else {
-                $_SESSION['admin_message'] = 'Something went wrong!.';
-                header('Location: news.php');
-                exit;
-            }
-        } else {
-            $error = true;
-            $message = 'Something wrong with image.';
         }
     }
+
 }
+
+
 
 
 ?>
@@ -177,7 +157,7 @@ if (isset($_POST['submit'])) {
                 <div class="container p-3">
                     <h4 class="text-center">Edit News</h4>
                     <hr>
-                    <form method="post" action="news_edit.php" enctype="multipart/form-data">
+                    <form method="post" action="news_edit.php?sn=<?php echo $sn; ?>" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label">News Title</label>
                             <input type="text" name="title" class="form-control" value="<?php echo $old_title; ?>" placeholder="Enter title" required>
@@ -189,8 +169,8 @@ if (isset($_POST['submit'])) {
                         </div>
 
                         <div class="mb-3">
-                            <label for="img" class="form-label">Image (Previous image won't change if left empty)</label>
-                            <input name="img" type="file" class="form-control" id="img-input" accept="image/*">
+                            <label for="image" class="form-label">Image (Previous image won't change if left empty)</label>
+                            <input name="image" type="file" class="form-control" id="img-input" accept="image/*">
 
                             <div class="img-preview mt-2">
                                 <img id="img-preview" src="<?php echo $old_img; ?>" alt="Image Preview" style="display: none; max-width: 20%; height: auto;" />

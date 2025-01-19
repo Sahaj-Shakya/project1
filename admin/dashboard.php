@@ -54,7 +54,7 @@ $contact_rows = mysqli_fetch_all($contact_result, MYSQLI_ASSOC);
                         <h6><?php echo $total ?></h6>
                     </li>
                     <li class="list-group-item">
-                        <a href="contactus.php">See Users</a>
+                        <a href="users.php">See Users</a>
                     </li>
                 </ul>
             </div>
