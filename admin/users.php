@@ -74,8 +74,8 @@ $superuser_result = mysqli_query($conn, $superuser_query);
                             <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
                                 <p style="max-width: 840px; font-size: large;"><?php echo $username ?></p>
                                 <div class="actions">
-                                    <a href="users_edit.php?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
-                                    <a href="users_delete.php?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
+                                    <a href="users_view.php?sn=<?php echo $sn; ?>" class="btn btn-warning">View</a>
+                                    <button class="btn btn-danger" onclick="showConfirmation(<?php echo $sn; ?>)">Delete</button>
                                 </div>
                             </li>
                         </ul>
@@ -88,7 +88,14 @@ $superuser_result = mysqli_query($conn, $superuser_query);
     <?php include "sidebar.php" ?>
 
 
-
+    <script>
+        function showConfirmation(sn) {
+            if (confirm("Confirm Delete?")) {
+                // User clicked "Yes"
+                window.location = `users_delete.php?sn=${sn}`
+            }
+        }
+    </script>
 
 </body>
 

@@ -1,7 +1,7 @@
 <?php
 include 'connection.php';
 
-$schedules_query = "SELECT * FROM `schedules`";
+$schedules_query = "SELECT * FROM `schedules` ORDER BY `sn` DESC";
 $result = mysqli_query($conn, $schedules_query);
 
 

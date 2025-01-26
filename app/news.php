@@ -1,7 +1,7 @@
 <?php
 include 'connection.php';
 
-$news_query = "SELECT * FROM `news`";
+$news_query = "SELECT * FROM `news` ORDER BY `sn` DESC";
 $result = mysqli_query($conn, $news_query);
 
 

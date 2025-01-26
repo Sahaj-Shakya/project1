@@ -19,7 +19,7 @@ function validate($name, $email, $phone, $subject, $user_message)
         return false;
     }
 
-    if (strlen($subject) > 100){
+    if (strlen($subject) > 100) {
         $error = true;
         $message = 'Subject is too long.';
         return false;
@@ -40,32 +40,27 @@ function validate($name, $email, $phone, $subject, $user_message)
     return true;
 }
 
-
 if (isset($_POST['submit'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $subject = $_POST['subject'];
+    $user_message = $_POST['message'];
+
     if ($username !== '') {
-        $query = "SELECT `sn`, `password` FROM `user` WHERE `email` = '$user_email' LIMIT 1";
-        $result = mysqli_query($conn, $query);
-
-        if ($result) {
-            $row = mysqli_fetch_assoc($result);
-            $id = $row['sn'];
-        }
-
-        $user_sn = $id;
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $subject = $_POST['subject'];
-        $user_message = $_POST['message'];
-
         if (validate($name, $email, $phone, $subject, $user_message)) {
-            $contact_us_query = "INSERT INTO `contact_us` (`user_sn`, `name`, `email`, `phone`, `subject`, `message`, `created_at`) VALUES ('$user_sn', '$name', '$email', '$phone', '$subject ', '$user_message', CURRENT_TIMESTAMP);";
+            
+            $contact_us_query = "INSERT INTO `contact_us` (`name`, `email`, `phone`, `subject`, `message`, `created_at`) 
+                                 VALUES ('$name', '$email', '$phone', '$subject', '$user_message', CURRENT_TIMESTAMP);";
             $contact_us_result = mysqli_query($conn, $contact_us_query);
 
             if ($contact_us_result) {
                 $_SESSION['message'] = 'Message sent successfully!';
                 header('Location: contact.php');
                 exit;
+            } else {
+                $error = true;
+                $message = 'Failed to send your message. Please try again later.';
             }
         }
     } else {
@@ -75,8 +70,9 @@ if (isset($_POST['submit'])) {
     }
 }
 
-
 ?>
+
+
 
 <html lang="en">
 
