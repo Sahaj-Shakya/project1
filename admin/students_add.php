@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
                     if (mysqli_num_rows($check_result) > 0) {
                         // Roll number already exists in the same faculty and semester
                         $error = true;
-                        $message = "The roll number $roll_no already exists in the same faculty and semester.";
+                        $message = "Roll number already exists in the same faculty and semester.";
                         break;
                     }
 
@@ -88,13 +88,18 @@ if (isset($_POST['submit'])) {
         <?php include "leftside.php"; ?>
 
         <div class="right-side">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mt-4 ms-3">
-                    <li class="breadcrumb-item"><a href="dashboard.php">Admin</a></li>
-                    <li class="breadcrumb-item"><a href="students.php">Students List</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Students</li>
-                </ol>
-            </nav>
+            <div class="bread d-flex justify-content-between">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mt-4 ms-3">
+                        <li class="breadcrumb-item"><a href="dashboard.php">Admin</a></li>
+                        <li class="breadcrumb-item"><a href="students.php">Students List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Students</li>
+                    </ol>
+                </nav>
+                <div class="add mt-4 me-3">
+                    <a href="students.php" class="btn btn-primary">Back</a>
+                </div>
+            </div>
 
             <div class="container border p-3 mt-4" style="max-width: 800px;">
                 <!-- Display any messages -->
@@ -120,6 +125,9 @@ if (isset($_POST['submit'])) {
                     <div class="mb-3">
                         <label for="csv_file" class="form-label">Upload CSV File</label>
                         <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+                        <small class="form-text text-muted">
+                            Download an <a href="example.csv" download>example CSV file</a> to see the required format.
+                        </small>
                     </div>
 
                     <div class="d-grid">

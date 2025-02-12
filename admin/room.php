@@ -94,7 +94,7 @@ if (isset($_GET['delete_sn'])) {
                                     <td><?php echo $counter; ?></td>
                                     <td><?php echo ($room['room_no']); ?></td>
                                     <td>
-                                        <!-- <a href="edit_room.php?sn=<?php echo $room['sn']; ?>" class="btn btn-warning btn-sm">Edit</a> -->
+                                        <a href="room_view.php?sn=<?php echo $room['sn']; ?>" class="btn btn-warning btn-sm">View</a>
                                         <a href="?delete_sn=<?php echo $room['sn']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this room?');">Delete</a>
                                     </td>
                                 </tr>
