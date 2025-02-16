@@ -1,14 +1,16 @@
 <?php
 
-$rooms = [];
-$bca = [];
-$bbm = [];
+$rooms = []; // This should be populated with room numbers
+$bca = []; // Populate this array with the BCA student list
+$bbm = []; // Populate this array with the BBM student list
 
+// Function to randomize an array (students list)
 function randomizeArray($list) {
     shuffle($list);
-    return $list;   
+    return $list;
 }
 
+// Function to plan the seating arrangement
 function planSeat($bca, $bbm) {
     $randomized_bca = randomizeArray($bca);
     $randomized_bbm = randomizeArray($bbm);
@@ -20,11 +22,11 @@ function planSeat($bca, $bbm) {
 
     $maxLength = max(count($randomized_bca), count($randomized_bbm));
 
-    for ($i = 0; $i < $maxLength; $i++){
-        if ($i % 2 == 0){
+    for ($i = 0; $i < $maxLength; $i++) {
+        if ($i % 2 == 0) {
             $a[] = $randomized_bca[$i] ?? null;
             $b[] = $randomized_bbm[$i] ?? null;
-        }else{
+        } else {
             $c[] = $randomized_bca[$i] ?? null;
             $d[] = $randomized_bbm[$i] ?? null;
         }
@@ -33,38 +35,77 @@ function planSeat($bca, $bbm) {
     return ['a' => $a, 'b' => $b, 'c' => $c, 'd' => $d];
 }
 
+// Function to assign rooms to students
 function assignRoom($a, $b, $c, $d, $rooms) {
     $seatPlanDict = [];
     $totalRooms = count($rooms);
-    $currentRoom = 0;
+    $allStudents = ['a' => $a, 'b' => $b, 'c' => $c, 'd' => $d]; // Combine all sides into one array
 
-    $seatPlanDict[$rooms[$currentRoom]] = [
-        'a' => array_slice($a, 0, 8),
-        'b' => array_slice($b, 0, 8),
-        'c' => array_slice($c, 0, 8),
-        'd' => array_slice($d, 0, 8)
-    ];
+    // Calculate the number of students per room
+    $totalStudents = count($a) + count($b) + count($c) + count($d);
+    $studentsPerRoom = ceil($totalStudents / $totalRooms);
 
-    $currentRoom++;
-    if ($currentRoom < $totalRooms) {
-        $seatPlanDict[$rooms[$currentRoom]] = [
-            'a' => array_slice($a, 8),
-            'b' => array_slice($b, 8),
-            'c' => array_slice($c, 8),
-            'd' => array_slice($d, 8)
-        ];
+    // Assign students to rooms
+    foreach ($rooms as $index => $roomNo) {
+        $seatPlanDict[$roomNo] = ['a' => [], 'b' => [], 'c' => [], 'd' => []];
+
+        // Assign students to each side of the room
+        foreach (['a', 'b', 'c', 'd'] as $side) {
+            $start = $index * ($studentsPerRoom / 4); // Divide students equally among sides
+            $seatPlanDict[$roomNo][$side] = array_slice($allStudents[$side], $start, $studentsPerRoom / 4);
+        }
     }
 
-    return $seatPlanDict; 
+    return $seatPlanDict;
 }
 
-// Get the seat plan
-$seatPlan = planSeat($bca, $bbm);
-extract($seatPlan); // Extract $a, $b, $c, $d from the returned array
+// Store the seat plan in the database
+function storeSeatPlan($roomAssignments, $conn, $selectedBca, $selectedBbm) {
+    $isStored = true; // Flag to track whether the data is stored successfully
 
-// Assign students to rooms and store the result in an object
-$roomAssignments = assignRoom($a, $b, $c, $d, $rooms);
+    foreach ($roomAssignments as $roomNo => $sides) {
+        foreach ($sides as $side => $studentsList) {
+            foreach ($studentsList as $index => $student) {
+                if ($student !== null) {
+                    // Determine the column (left or right) based on the side
+                    $column = ($side === 'a' || $side === 'b') ? 'L' : 'R';
 
-// echo json_encode($roomAssignments, JSON_PRETTY_PRINT);
+                    // Calculate bench number (1 to 8 per column)
+                    $benchNo = ($index % 8) + 1; // 8 benches per column
+
+                    // Format bench_no as 1(L) or 2(R), etc.
+                    $benchNoWithColumn = $benchNo . '(' . $column . ')';
+
+                    // Determine the side of the bench (left or right)
+                    $benchSide = ($side === 'a' || $side === 'c') ? 'L' : 'R';
+
+                    // Insert into the database
+                    $roll_no = $student['roll_no'];
+                    $name = $student['name'];
+                    $semester = $student['semester'];
+                    $faculty = $student['faculty'];
+
+                    $query = "INSERT INTO seat_plan (name, room_no, semester, roll_no, faculty, bench_no, side) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = mysqli_prepare($conn, $query);
+
+                    if (!$stmt) {
+                        $isStored = false; // Set flag to false if statement preparation fails
+                        break;
+                    }
+
+                    // Bind parameters
+                    mysqli_stmt_bind_param($stmt, 'sssssss', $name, $roomNo, $semester, $roll_no, $faculty, $benchNoWithColumn, $benchSide);
+
+                    if (!mysqli_stmt_execute($stmt)) {
+                        $isStored = false; // Set flag to false if execute fails
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return $isStored; // Return whether the data was stored successfully or not
+}
 
 ?>
