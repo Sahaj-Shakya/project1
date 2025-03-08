@@ -72,7 +72,6 @@ if (isset($_POST['login'])) {
                     <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="cursor: pointer; right: 10px; top: 40px;"></i>
                 </div>
 
-                <p style="margin-bottom: 5px;">Forgot password? <a href="forgot_password.php" style="text-decoration: underline;">click here!</a></p>
                 <div class="d-grid">
                     <button name="login" type="submit" class="btn btn-outline-secondary">Login</button>
                 </div>

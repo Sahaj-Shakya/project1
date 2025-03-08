@@ -7,12 +7,6 @@ include 'connection.php';
 $news_query = "SELECT * FROM `news`";
 $result = mysqli_query($conn, $news_query);
 
-// Fetch random facts
-$facts_file = '../scripts/new.txt'; 
-$num_of_facts = 3;
-$py_script = escapeshellcmd("python3 ../scripts/facts.py $facts_file $num_of_facts");
-$output = shell_exec($py_script);
-$output_array = json_decode($output, true);
 
 // Handle search request
 $search_result = null;
@@ -92,18 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
         </div>
     </div>
 
-    <!-- Did You Know Section -->
-    <div class="container mt-5">
-        <div class="container container_trivia p-3">
-            <h4>Did You Know?</h4>
-            <hr>
-            <ul class="list-group">
-                <?php foreach ($output_array as $line): ?>
-                    <li class="list-group-item"><?php echo $line; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
 
     <?php include 'footer.php' ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

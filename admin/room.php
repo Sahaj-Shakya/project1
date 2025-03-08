@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 $admin = isset($_SESSION['admin']) ? $_SESSION['admin'] : '';
 
@@ -31,13 +30,13 @@ if (isset($_GET['delete_sn'])) {
     $delete_query = "DELETE FROM `rooms` WHERE `sn` = '$delete_sn' LIMIT 1";
     if (mysqli_query($conn, $delete_query)) {
         $_SESSION['admin_message'] = 'Room deleted successfully!';
-        header('Location: room.php');
     } else {
         $_SESSION['admin_message'] = 'Error deleting room!';
-        header('Location: room.php');
     }
-}
 
+    header('Location: room.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -94,11 +93,12 @@ if (isset($_GET['delete_sn'])) {
                                     <td><?php echo $counter; ?></td>
                                     <td><?php echo ($room['room_no']); ?></td>
                                     <td>
-                                        <a href="room_view.php?room_no=<?php echo $room['room_no']; ?>" class="btn btn-warning btn-sm">View</a>
+                                        <!-- Updated "View" button to use room_sn -->
+                                        <a href="room_view.php?room_sn=<?php echo $room['sn']; ?>" class="btn btn-warning btn-sm">View</a>
                                         <a href="?delete_sn=<?php echo $room['sn']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this room?');">Delete</a>
                                     </td>
                                 </tr>
-                                <?php $counter ++ ?>
+                                <?php $counter++; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
@@ -107,8 +107,6 @@ if (isset($_GET['delete_sn'])) {
                         <?php endif; ?>
                     </tbody>
                 </table>
-
-
             </div>
         </div>
     </div>
