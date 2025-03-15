@@ -16,16 +16,20 @@ $message = '';
 if (isset($_GET['sn'])) {
     $sn = intval($_GET['sn']);
 
-    // Fetch student data
-    $query = "SELECT * FROM `students` WHERE `sn` = '$sn' LIMIT 1;";
-    $result = mysqli_query($conn, $query);
+    // Fetch student data using prepared statement
+    $query = "SELECT * FROM `students` WHERE `sn` = ? LIMIT 1";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $sn);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         $name = $row['name'];
         $faculty = $row['faculty'];
         $roll_no = $row['roll_no'];
-        $semester = $row['semester']; // Fetch semester data
+        $semester = $row['semester'];
+        $original_roll_no = $roll_no; // Store the original roll number for comparison
     } else {
         $error = true;
         $message = 'Student not found.';
@@ -36,41 +40,56 @@ if (isset($_GET['sn'])) {
 }
 
 // Handle form submission for updating the student
-if (isset($_POST['update_student'])) {
+if (isset($_POST['update_student']) && !$error) {
     $name = trim($_POST['name']);
     $roll_no = trim($_POST['roll_no']);
     $faculty = trim($_POST['faculty']);
-    $semester = trim($_POST['semester']); // Get the semester value
-
-    if ($name === '' || $roll_no === '' || $faculty === '' || $semester === '') {
+    $semester = trim($_POST['semester']);
+    
+    // Validate inputs
+    if (empty($name) || empty($roll_no) || empty($faculty) || empty($semester)) {
         $error = true;
         $message = 'All fields are required.';
+    } elseif (!is_numeric($roll_no)) {
+        $error = true;
+        $message = 'Roll number must contain only numbers.';
+    } elseif ($roll_no < 0) {
+        $error = true;
+        $message = 'Roll number cannot be a negative number.';
+    } elseif (strlen($roll_no) > 10) { // Example: Limit roll number to 10 characters
+        $error = true;
+        $message = 'Roll number cannot exceed 10 characters.';
     } else {
-        // Check if another student exists with the same roll number and faculty (excluding the current student)
-        $check_query = "SELECT * FROM `students` WHERE `roll_no` = '$roll_no' AND `faculty` = '$faculty' AND `semester` = '$semester' AND `sn` != '$sn'";
-        $check_result = mysqli_query($conn, $check_query);
+        $need_to_check_duplicate = ($roll_no != $original_roll_no); // Only check for duplicates if roll number changed
+        
+        if ($need_to_check_duplicate) {
+            // Check if another student exists with the same roll number
+            $check_query = "SELECT * FROM `students` WHERE `roll_no` = ? AND `sn` != ?";
+            $check_stmt = mysqli_prepare($conn, $check_query);
+            mysqli_stmt_bind_param($check_stmt, "ii", $roll_no, $sn);
+            mysqli_stmt_execute($check_stmt);
+            $check_result = mysqli_stmt_get_result($check_stmt);
 
-        if (mysqli_num_rows($check_result) > 0) {
-            $error = true;
-            $message = 'This roll number already exists in the same faculty and semester.';
-        } else {
+            if (mysqli_num_rows($check_result) > 0) {
+                $error = true;
+                $message = 'This roll number already exists';
+            }
+        }
+        
+        // If no duplicate error, proceed with updating
+        if (!$error) {
             // No conflict found, proceed with updating the student
-            $update_query = "
-                UPDATE `students`
-                SET 
-                    `name` = '$name',
-                    `roll_no` = '$roll_no',
-                    `faculty` = '$faculty',
-                    `semester` = '$semester'  -- Update the semester
-                WHERE `sn` = '$sn';
-            ";
-
-            if (mysqli_query($conn, $update_query)) {
-                $_SESSION['admin_message'] = 'Details Updated Successfully!';
+            $update_query = "UPDATE `students` SET `name` = ?, `roll_no` = ?, `faculty` = ?, `semester` = ? WHERE `sn` = ?";
+            $update_stmt = mysqli_prepare($conn, $update_query);
+            mysqli_stmt_bind_param($update_stmt, "sissi", $name, $roll_no, $faculty, $semester, $sn);
+            
+            if (mysqli_stmt_execute($update_stmt)) {
+                $_SESSION['admin_message'] = 'Student details updated successfully!';
                 header('Location: students.php');
+                exit;
             } else {
-                $_SESSION['admin_message'] = 'Something went wrong!';
-                header('Location: students.php');
+                $error = true;
+                $message = 'Error updating student: ' . mysqli_error($conn);
             }
         }
     }
@@ -137,6 +156,11 @@ if (isset($_POST['update_student'])) {
                             <a href="students.php" class="btn btn-danger">Cancel</a>
                         </div>
                     </form>
+                <?php else: ?>
+                    <div class="text-center">
+                        <h4>Student not found</h4>
+                        <a href="students.php" class="btn btn-primary mt-3">Back to Students List</a>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

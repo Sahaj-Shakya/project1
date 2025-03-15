@@ -72,13 +72,11 @@ $superuser_result = mysqli_query($conn, $superuser_query);
                             <li class="list-group-item d-flex justify-content-between d-flex align-items-center">
                                 <p style="max-width: 840px; font-size: large;"><?php echo $username; ?></p>
                                 <div class="actions">
-                                    <?php if ($username === 'super admin'): ?>
+                                    
+                                    
                                         <button class="btn btn-warning disabled" aria-disabled="true">Edit</button>
                                         <button class="btn btn-danger disabled" aria-disabled="true">Delete</button>
-                                    <?php else: ?>
-                                        <a href="#?sn=<?php echo $sn; ?>" class="btn btn-warning">Edit</a>
-                                        <a href="#?sn=<?php echo $sn; ?>" class="btn btn-danger">Delete</a>
-                                    <?php endif; ?>
+                                    
                                 </div>
 
                             </li>

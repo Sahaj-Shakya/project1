@@ -7,18 +7,25 @@ include 'connection.php';
 $news_query = "SELECT * FROM `news`";
 $result = mysqli_query($conn, $news_query);
 
-
 // Handle search request
 $search_result = null;
 $search_message = ''; // Variable to store search validation message
 $roll_no = ''; // Initialize roll number variable
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
     $roll_no = mysqli_real_escape_string($conn, $_GET['search']); // Sanitize input
-    $search_query = "SELECT * FROM seat_plan WHERE roll_no = '$roll_no'";
-    $search_result = mysqli_query($conn, $search_query);
 
-    if (!$search_result || mysqli_num_rows($search_result) === 0) {
-        $search_message = "No seat details found for roll number: $roll_no";
+    // Validate roll number (must be a positive integer)
+    if (!ctype_digit($roll_no) || $roll_no <= 0) {
+        $search_message = "Invalid roll number";
+    } else {
+        // Proceed with the search if the roll number is valid
+        $search_query = "SELECT * FROM seat_plan WHERE roll_no = '$roll_no'";
+        $search_result = mysqli_query($conn, $search_query);
+
+        if (!$search_result || mysqli_num_rows($search_result) === 0) {
+            $search_message = "No seat details found for roll number: $roll_no";
+        }
     }
 }
 ?>
@@ -49,19 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
             </div>
 
             <!-- Display Search Results or Validation Message -->
-            <div class="container p-3 overflow-auto">
+            <div class="p-3">
                 <?php if ($search_result && mysqli_num_rows($search_result) > 0): ?>
                     <?php $student = mysqli_fetch_assoc($search_result); ?>
                     <div class="card border p-3">
-                        <p class="card-text"><strong>Name:</strong> <?php echo $student['name']; ?></p>
-                        <p class="card-text"><strong>Roll No:</strong> <?php echo $student['roll_no']; ?></p>
-                        <p class="card-text"><strong>Room No:</strong> <?php echo $student['room_no']; ?></p>
-                        <p class="card-text"><strong>Bench:</strong> <?php echo $student['bench_no']; ?></p>
-                        <p class="card-text"><strong>Side:</strong> <?php echo $student['side']; ?></p>
+                        <p class="card-text"><strong>Name:</strong> <?php echo htmlspecialchars($student['name']); ?></p>
+                        <p class="card-text"><strong>Roll No:</strong> <?php echo htmlspecialchars($student['roll_no']); ?></p>
+                        <p class="card-text"><strong>Room No:</strong> <?php echo htmlspecialchars($student['room_no']); ?></p>
+                        <p class="card-text"><strong>Bench:</strong> <?php echo htmlspecialchars($student['bench_no']); ?></p>
+                        <p class="card-text"><strong>Side:</strong> <?php echo htmlspecialchars($student['side']); ?></p>
                     </div>
                 <?php elseif (!empty($search_message)): ?>
                     <div class="alert alert-warning" role="alert">
-                        <?php echo $search_message; ?>
+                        <?php echo htmlspecialchars($search_message); ?>
                     </div>
                 <?php else: ?>
                     <p class="text-muted">Enter your roll number in the search box and click "Search" to find your seat planning.</p>
@@ -85,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
             </div>
         </div>
     </div>
-
 
     <?php include 'footer.php' ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -31,7 +31,7 @@ $query = "
     JOIN 
         students 
     ON 
-        seat_plan.student_sn = students.sn 
+        seat_plan.roll_no = students.roll_no 
     WHERE 
         seat_plan.room_sn = ? 
     ORDER BY 

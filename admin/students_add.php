@@ -31,14 +31,14 @@ if (isset($_POST['submit'])) {
                     $name = $data[0]; // Student name
                     $roll_no = $data[1]; // Roll number
 
-                    // Check if the roll number already exists in the same faculty and semester
-                    $check_query = "SELECT * FROM students WHERE roll_no = '$roll_no' AND faculty = '$faculty' AND semester = '$semester'";
+                    // Check if the roll number already exists in the entire students table
+                    $check_query = "SELECT * FROM students WHERE roll_no = '$roll_no'";
                     $check_result = mysqli_query($conn, $check_query);
 
                     if (mysqli_num_rows($check_result) > 0) {
-                        // Roll number already exists in the same faculty and semester
+                        // Roll number already exists in the database
                         $error = true;
-                        $message = "Roll number already exists in the same faculty and semester.";
+                        $message = "There already exist a roll no in the database.";
                         break;
                     }
 
@@ -58,6 +58,7 @@ if (isset($_POST['submit'])) {
                 if (!$error) {
                     $_SESSION['admin_message'] = 'Added Successfully!';
                     header('Location: students.php');
+                    exit; // Ensure no further code is executed after redirection
                 }
             } else {
                 $error = true;
@@ -81,6 +82,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Add Students</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -139,6 +141,7 @@ if (isset($_POST['submit'])) {
     </div>
 
     <?php include "sidebar.php"; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

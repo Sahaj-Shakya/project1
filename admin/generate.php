@@ -66,6 +66,11 @@ function storeSeatPlan($roomAssignments, $conn, $selectedSemesters) {
     mysqli_begin_transaction($conn);
 
     try {
+        // Check if $roomAssignments is empty
+        if (empty($roomAssignments)) {
+            throw new Exception("No room assignments to store.");
+        }
+
         foreach ($roomAssignments as $roomSn => $sides) {
             // Validate room_sn before proceeding
             if (!validateRoomSn($roomSn, $conn)) {
@@ -89,19 +94,19 @@ function storeSeatPlan($roomAssignments, $conn, $selectedSemesters) {
                         $benchSide = ($side === 'a' || $side === 'c') ? 'L' : 'R';
 
                         // Insert into the database
-                        $student_sn = $student['sn']; // Use student_sn instead of roll_no
+                        $roll_no = $student['roll_no']; // Use roll_no instead of student_sn
                         $name = $student['name'];
                         $semester = $student['semester'];
                         $faculty = $student['faculty'];
 
                         // Check for missing required fields
-                        if (empty($roomSn) || empty($student_sn) || empty($benchNoWithColumn)) {
-                            error_log("Missing required fields: room_sn=$roomSn, student_sn=$student_sn, bench_no=$benchNoWithColumn");
+                        if (empty($roomSn) || empty($roll_no) || empty($benchNoWithColumn)) {
+                            error_log("Missing required fields: room_sn=$roomSn, roll_no=$roll_no, bench_no=$benchNoWithColumn");
                             continue; // Skip this record
                         }
 
                         // Insert query
-                        $query = "INSERT INTO seat_plan (name, student_sn, semester, faculty, bench_no, side, room_sn) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        $query = "INSERT INTO seat_plan (name, roll_no, semester, faculty, bench_no, side, room_sn) VALUES (?, ?, ?, ?, ?, ?, ?)";
                         $stmt = mysqli_prepare($conn, $query);
 
                         if (!$stmt) {
@@ -109,7 +114,7 @@ function storeSeatPlan($roomAssignments, $conn, $selectedSemesters) {
                         }
 
                         // Bind parameters
-                        mysqli_stmt_bind_param($stmt, 'sissssi', $name, $student_sn, $semester, $faculty, $benchNoWithColumn, $benchSide, $roomSn);
+                        mysqli_stmt_bind_param($stmt, 'sissssi', $name, $roll_no, $semester, $faculty, $benchNoWithColumn, $benchSide, $roomSn);
 
                         if (!mysqli_stmt_execute($stmt)) {
                             throw new Exception("Failed to execute statement: " . mysqli_error($conn));

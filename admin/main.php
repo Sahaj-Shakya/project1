@@ -65,22 +65,20 @@ function fetchStudents($semesters, $conn) {
         }, $semesters);
         $semesterList = implode("','", $semesterNumbers);
 
-        // Query to fetch student sn, name, semester, and faculty
-        $query = "SELECT sn, name, semester, faculty FROM students WHERE semester IN ('$semesterList')";
-        $stmt = $conn->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Updated query to fetch student sn, name, semester, faculty, and roll_no
+        $query = "SELECT sn, name, semester, faculty, roll_no FROM students WHERE semester IN ('$semesterList')";
+        $result = mysqli_query($conn, $query);
 
-        // Store student sn, name, semester, and faculty
-        while ($row = $result->fetch_assoc()) {
+        // Store student sn, name, semester, faculty, and roll_no
+        while ($row = mysqli_fetch_assoc($result)) {
             $students[] = [
-                'sn' => $row['sn'], // Use sn instead of roll_no
+                'sn' => $row['sn'], // Use sn for internal reference
                 'name' => $row['name'],
                 'semester' => $row['semester'],
-                'faculty' => $row['faculty']
+                'faculty' => $row['faculty'],
+                'roll_no' => $row['roll_no'] // Include roll_no for seat_plan table
             ];
         }
-        $stmt->close();
     }
     return $students;
 }
