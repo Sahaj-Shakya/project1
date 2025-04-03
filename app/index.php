@@ -40,6 +40,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 <body>
     <?php include 'nav.php' ?>
 
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
     <!-- Main Content -->
     <div class="container flex-column flex-sm-row d-flex w-100 col-lg-7 gap-4 mt-3">
         <!-- Search Section -->
@@ -56,13 +69,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
             </div>
 
             <!-- Display Search Results or Validation Message -->
-            <div class="p-3">
+            <div class="p-3 ">
                 <?php if ($search_result && mysqli_num_rows($search_result) > 0): ?>
                     <?php $student = mysqli_fetch_assoc($search_result); ?>
-                    <div class="card border p-3">
+
+                    <?php 
+                    $room_sn = $student['room_sn'];
+                    $room_query = "SELECT room_no FROM `rooms` WHERE sn=$room_sn;";
+                    $room_result = mysqli_query($conn, $room_query);
+
+                    $rooms = mysqli_fetch_assoc($room_result);
+                    ?>
+
+                    
+                    <div class="card bg-milam  p-3">
                         <p class="card-text"><strong>Name:</strong> <?php echo htmlspecialchars($student['name']); ?></p>
                         <p class="card-text"><strong>Roll No:</strong> <?php echo htmlspecialchars($student['roll_no']); ?></p>
-                        <p class="card-text"><strong>Room No:</strong> <?php echo htmlspecialchars($student['room_no']); ?></p>
+                        <p class="card-text"><strong>Room No:</strong> <?php echo htmlspecialchars($rooms['room_no']); ?></p>
                         <p class="card-text"><strong>Bench:</strong> <?php echo htmlspecialchars($student['bench_no']); ?></p>
                         <p class="card-text"><strong>Side:</strong> <?php echo htmlspecialchars($student['side']); ?></p>
                     </div>

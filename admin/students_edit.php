@@ -68,6 +68,8 @@ if (isset($_POST['update_student']) && !$error) {
             $check_stmt = mysqli_prepare($conn, $check_query);
             mysqli_stmt_bind_param($check_stmt, "ii", $roll_no, $sn);
             mysqli_stmt_execute($check_stmt);
+
+            
             $check_result = mysqli_stmt_get_result($check_stmt);
 
             if (mysqli_num_rows($check_result) > 0) {

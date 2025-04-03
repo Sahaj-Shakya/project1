@@ -8,15 +8,13 @@ if ($admin === '') {
 
 include '../app/connection.php';
 
-// Check if room_sn is provided in the URL
 if (!isset($_GET['room_sn'])) {
     header('Location: room.php');
     exit;
 }
 
-$room_sn = intval($_GET['room_sn']); // Ensure room_sn is an integer
+$room_sn = intval($_GET['room_sn']); 
 
-// Query to fetch the seat plan for the specific room
 $query = "
     SELECT 
         seat_plan.*, 
@@ -38,7 +36,6 @@ $query = "
         bench_no, side
 ";
 
-// Use prepared statements to prevent SQL injection
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $room_sn);
 mysqli_stmt_execute($stmt);
@@ -49,7 +46,7 @@ $room_no = '';
 if ($result && mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $room_no = $row['room_no'];
-    mysqli_data_seek($result, 0); // Reset the result pointer to the beginning
+    mysqli_data_seek($result, 0); 
 }
 ?>
 

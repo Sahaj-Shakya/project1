@@ -13,7 +13,6 @@ include "../app/connection.php";
 $error = false;
 $message = '';
 
-// Handle form submission for adding a room
 if (isset($_POST['add_room'])) {
     $room_no = trim($_POST['room_no']);
 

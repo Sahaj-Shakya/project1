@@ -7,7 +7,7 @@ if ($admin === '') {
 }
 
 include '../app/connection.php';
-include 'generate.php'; // Include the generate.php file to access its functions
+include 'generate.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedRooms = $_POST['rooms'] ?? [];
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Fetch students for selected semesters
+
     $students = fetchStudents($selectedSemesters, $conn);
 
     // Check if students were fetched for the selected semesters
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Generate seat plan
-    $seatPlan = planSeat($students, $students); // Assuming planSeat can handle the same list for both groups
-    extract($seatPlan); // Extract variables $a, $b, $c, $d from $seatPlan
+    $seatPlan = planSeat($students); // Generate seat plan
+    extract($seatPlan); 
 
     // Assign rooms to the seat plan
     $roomAssignments = assignRoom($a, $b, $c, $d, $selectedRooms);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Fetch all rooms from the database
+
 $room_query = "SELECT * FROM `rooms`";
 $room_result = mysqli_query($conn, $room_query);
 
@@ -61,22 +61,22 @@ function fetchStudents($semesters, $conn) {
     $students = [];
     if (!empty($semesters)) {
         $semesterNumbers = array_map(function ($s) {
-            return preg_replace('/\D/', '', $s); // Extract semester numbers
+            return preg_replace('/\D/', '', $s); 
         }, $semesters);
         $semesterList = implode("','", $semesterNumbers);
 
-        // Updated query to fetch student sn, name, semester, faculty, and roll_no
-        $query = "SELECT sn, name, semester, faculty, roll_no FROM students WHERE semester IN ('$semesterList')";
+        $query = "SELECT DISTINCT sn, name, semester, faculty, roll_no 
+                  FROM students 
+                  WHERE semester IN ('$semesterList')";
         $result = mysqli_query($conn, $query);
 
-        // Store student sn, name, semester, faculty, and roll_no
         while ($row = mysqli_fetch_assoc($result)) {
             $students[] = [
-                'sn' => $row['sn'], // Use sn for internal reference
+                'sn' => $row['sn'],
                 'name' => $row['name'],
                 'semester' => $row['semester'],
                 'faculty' => $row['faculty'],
-                'roll_no' => $row['roll_no'] // Include roll_no for seat_plan table
+                'roll_no' => $row['roll_no']
             ];
         }
     }
@@ -93,11 +93,10 @@ function fetchStudents($semesters, $conn) {
     <title>Admin Panel - Plan Seat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Custom CSS for grid layout */
         .semester-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust column width as needed */
-            gap: 0.5rem 1rem; /* gap-2 horizontally (0.5rem), gap-1 vertically (0.25rem) */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem 1rem;
         }
     </style>
 </head>
@@ -130,7 +129,7 @@ function fetchStudents($semesters, $conn) {
                             <!-- Room Selection -->
                             <div class="mb-4">
                                 <label class="form-label">Select Rooms (Exactly 2)</label>
-                                <div class="d-flex flex-wrap gap-2"> <!-- gap-2 for horizontal spacing -->
+                                <div class="d-flex flex-wrap gap-2">
                                     <?php while ($row = mysqli_fetch_assoc($room_result)): ?>
                                         <div class="form-check">
                                             <input class="form-check-input room-checkbox" type="checkbox" name="rooms[]" value="<?php echo $row['sn']; ?>">
@@ -144,8 +143,7 @@ function fetchStudents($semesters, $conn) {
                             <!-- Semester Selection -->
                             <div class="mb-4">
                                 <label class="form-label">Select Semesters (Exactly 2)</label>
-                                <div class="semester-grid"> <!-- Custom grid layout -->
-                                    <!-- BCA Semesters -->
+                                <div class="semester-grid">
                                     <?php for ($i = 1; $i <= 8; $i++): ?>
                                         <div class="form-check">
                                             <input class="form-check-input semester-checkbox" type="checkbox" name="semesters[]" value="bca-<?php echo $i; ?>">
@@ -153,7 +151,6 @@ function fetchStudents($semesters, $conn) {
                                         </div>
                                     <?php endfor; ?>
 
-                                    <!-- BBM Semesters -->
                                     <?php for ($i = 1; $i <= 8; $i++): ?>
                                         <div class="form-check">
                                             <input class="form-check-input semester-checkbox" type="checkbox" name="semesters[]" value="bbm-<?php echo $i; ?>">

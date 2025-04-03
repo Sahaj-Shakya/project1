@@ -245,3 +245,12 @@ hr {
     border-radius: 50%;
 }
 /* profile.php end */
+
+
+
+.bg-milam{
+    background: #e7e6e6;
+    border: none;
+    outline: none;
+    margin-top: -1.3rem;
+}

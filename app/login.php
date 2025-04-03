@@ -63,7 +63,7 @@ if(isset($_POST['login'])){
 
     <?php endif; ?>
 
-    <?php if (isset($_SESSION['message'])): ?>
+    <!-- <?php if (isset($_SESSION['message'])): ?>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-sm-10 col-md-8 col-lg-6">
@@ -75,7 +75,7 @@ if(isset($_POST['login'])){
                 </div>
             </div>
         </div>
-    <?php endif; ?>
+    <?php endif; ?> -->
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 150px;">
         <div class="card container_login p-4 col-lg-4 col-md-6 col-sm-8">

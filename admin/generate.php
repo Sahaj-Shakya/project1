@@ -1,13 +1,13 @@
 <?php
 
-// Function to randomize an array (students list)
-function randomizeArray($list) {
+function randomizeArray($list)
+{
     shuffle($list);
     return $list;
 }
 
-// Function to plan the seating arrangement
-function planSeat($students) {
+function planSeat($students)
+{
     $randomizedStudents = randomizeArray($students);
 
     $a = []; // Left side of left column
@@ -18,15 +18,13 @@ function planSeat($students) {
     $maxLength = count($randomizedStudents);
 
     for ($i = 0; $i < $maxLength; $i++) {
-        if ($i % 2 == 0) {
+        if ($i % 4 == 0) {
             $a[] = $randomizedStudents[$i] ?? null;
-        } else {
+        } elseif ($i % 4 == 1) {
             $b[] = $randomizedStudents[$i] ?? null;
-        }
-
-        if ($i % 2 == 0) {
+        } elseif ($i % 4 == 2) {
             $c[] = $randomizedStudents[$i] ?? null;
-        } else {
+        } elseif ($i % 4 == 3) {
             $d[] = $randomizedStudents[$i] ?? null;
         }
     }
@@ -34,110 +32,118 @@ function planSeat($students) {
     return ['a' => $a, 'b' => $b, 'c' => $c, 'd' => $d];
 }
 
-// Function to assign rooms to students
-function assignRoom($a, $b, $c, $d, $selectedRooms) {
+function assignRoom($a, $b, $c, $d, $selectedRooms)
+{
     $seatPlanDict = [];
     $totalRooms = count($selectedRooms);
-    $allStudents = ['a' => $a, 'b' => $b, 'c' => $c, 'd' => $d]; // Combine all sides into one array
 
-    // Calculate the number of students per room
-    $totalStudents = count($a) + count($b) + count($c) + count($d);
+    $allStudents = array_merge($a, $b, $c, $d);
+    $totalStudents = count($allStudents);
+
     $studentsPerRoom = ceil($totalStudents / $totalRooms);
 
-    // Assign students to rooms
     foreach ($selectedRooms as $index => $roomSn) {
         $seatPlanDict[$roomSn] = ['a' => [], 'b' => [], 'c' => [], 'd' => []];
 
-        // Assign students to each side of the room
-        foreach (['a', 'b', 'c', 'd'] as $side) {
-            $start = $index * ($studentsPerRoom / 4); // Divide students equally among sides
-            $seatPlanDict[$roomSn][$side] = array_slice($allStudents[$side], $start, $studentsPerRoom / 4);
+        $start = $index * $studentsPerRoom;
+        $end = $start + $studentsPerRoom;
+
+        for ($i = $start; $i < $end; $i++) {
+            if (isset($allStudents[$i])) {
+                $student = $allStudents[$i];
+
+                if (in_array($student, $a)) {
+                    $seatPlanDict[$roomSn]['a'][] = $student;
+                } elseif (in_array($student, $b)) {
+                    $seatPlanDict[$roomSn]['b'][] = $student;
+                } elseif (in_array($student, $c)) {
+                    $seatPlanDict[$roomSn]['c'][] = $student;
+                } elseif (in_array($student, $d)) {
+                    $seatPlanDict[$roomSn]['d'][] = $student;
+                }
+            }
         }
     }
 
     return $seatPlanDict;
 }
 
-// Store the seat plan in the database
-function storeSeatPlan($roomAssignments, $conn, $selectedSemesters) {
-    $isStored = true; // Flag to track whether the data is stored successfully
+function storeSeatPlan($roomAssignments, $conn, $selectedSemesters)
+{
+    $isStored = true; 
+    $rm_old_value_query = "TRUNCATE TABLE `project1`.`seat_plan`";
+    $rm_old_value_result = mysqli_query($conn, $rm_old_value_query);
 
-    // Begin a transaction for atomicity
-    mysqli_begin_transaction($conn);
+    if ($rm_old_value_result) {
+        mysqli_begin_transaction($conn);
 
-    try {
-        // Check if $roomAssignments is empty
-        if (empty($roomAssignments)) {
-            throw new Exception("No room assignments to store.");
-        }
-
-        foreach ($roomAssignments as $roomSn => $sides) {
-            // Validate room_sn before proceeding
-            if (!validateRoomSn($roomSn, $conn)) {
-                error_log("Invalid room_sn: $roomSn");
-                continue; // Skip this room
+        try {
+         
+            if (empty($roomAssignments)) {
+                throw new Exception("No room assignments to store.");
             }
 
-            foreach ($sides as $side => $studentsList) {
-                foreach ($studentsList as $index => $student) {
-                    if ($student !== null) {
-                        // Determine the column (left or right) based on the side
-                        $column = ($side === 'a' || $side === 'b') ? 'L' : 'R';
+            foreach ($roomAssignments as $roomSn => $sides) {
+       
+                if (!validateRoomSn($roomSn, $conn)) {
+                    error_log("Invalid room_sn: $roomSn");
+                    continue; 
+                }
 
-                        // Calculate bench number (1 to 8 per column)
-                        $benchNo = ($index % 8) + 1; // 8 benches per column
+                foreach ($sides as $side => $studentsList) {
+                    foreach ($studentsList as $index => $student) {
+                        if ($student !== null) {
+                            $roll_no = $student['roll_no'];
 
-                        // Format bench_no as 1(L) or 2(R), etc.
-                        $benchNoWithColumn = $benchNo . '(' . $column . ')';
+                            $checkQuery = "SELECT * FROM seat_plan WHERE roll_no = '$roll_no'";
+                            $checkResult = mysqli_query($conn, $checkQuery);
 
-                        // Determine the side of the bench (left or right)
-                        $benchSide = ($side === 'a' || $side === 'c') ? 'L' : 'R';
+                            if (mysqli_num_rows($checkResult) > 0) {
+                                continue;
+                            }
 
-                        // Insert into the database
-                        $roll_no = $student['roll_no']; // Use roll_no instead of student_sn
-                        $name = $student['name'];
-                        $semester = $student['semester'];
-                        $faculty = $student['faculty'];
+                            $column = ($side === 'a' || $side === 'b') ? 'L' : 'R';
 
-                        // Check for missing required fields
-                        if (empty($roomSn) || empty($roll_no) || empty($benchNoWithColumn)) {
-                            error_log("Missing required fields: room_sn=$roomSn, roll_no=$roll_no, bench_no=$benchNoWithColumn");
-                            continue; // Skip this record
-                        }
+                            $benchNo = ($index % 8) + 1; 
 
-                        // Insert query
-                        $query = "INSERT INTO seat_plan (name, roll_no, semester, faculty, bench_no, side, room_sn) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                        $stmt = mysqli_prepare($conn, $query);
+                            $benchNoWithColumn = $benchNo . '(' . $column . ')';
 
-                        if (!$stmt) {
-                            throw new Exception("Failed to prepare statement: " . mysqli_error($conn));
-                        }
+                            $benchSide = ($side === 'a' || $side === 'c') ? 'L' : 'R';
 
-                        // Bind parameters
-                        mysqli_stmt_bind_param($stmt, 'sissssi', $name, $roll_no, $semester, $faculty, $benchNoWithColumn, $benchSide, $roomSn);
+                            $name = $student['name'];
+                            $semester = $student['semester'];
+                            $faculty = $student['faculty'];
 
-                        if (!mysqli_stmt_execute($stmt)) {
-                            throw new Exception("Failed to execute statement: " . mysqli_error($conn));
+                            $query = "INSERT INTO seat_plan (name, roll_no, semester, faculty, bench_no, side, room_sn) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            $stmt = mysqli_prepare($conn, $query);
+
+                            if (!$stmt) {
+                                throw new Exception("Failed to prepare statement: " . mysqli_error($conn));
+                            }
+
+                            mysqli_stmt_bind_param($stmt, 'sissssi', $name, $roll_no, $semester, $faculty, $benchNoWithColumn, $benchSide, $roomSn);
+
+                            if (!mysqli_stmt_execute($stmt)) {
+                                throw new Exception("Failed to execute statement: " . mysqli_error($conn));
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Commit the transaction if all queries succeed
-        mysqli_commit($conn);
-    } catch (Exception $e) {
-        // Rollback the transaction on error
-        mysqli_rollback($conn);
-        error_log($e->getMessage());
-        $isStored = false;
+            mysqli_commit($conn);
+        } catch (Exception $e) {
+            mysqli_rollback($conn);
+            error_log($e->getMessage());
+            $isStored = false;
+        }
     }
 
-    return $isStored; // Return whether the data was stored successfully or not
+    return $isStored; 
 }
 
-// Function to validate room_sn
-function validateRoomSn($roomSn, $conn) {
+function validateRoomSn($roomSn, $conn)
+{
     $query = "SELECT * FROM rooms WHERE sn = ?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, 'i', $roomSn);
@@ -145,4 +151,3 @@ function validateRoomSn($roomSn, $conn) {
     $result = mysqli_stmt_get_result($stmt);
     return mysqli_num_rows($result) > 0;
 }
-?>
